@@ -9,9 +9,9 @@ display_width, display_height = birb_code.display_width, birb_code.display_heigh
 GD = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()  # FPS stuff
 crashed = False
-birb_pic = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\birb.png')
-green_birb_pic = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\birb_touch.png')
-sight_pic = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\sight.png')
+birb_pic = pygame.image.load(r'/home/agmui/Desktop/pyImages/birb.png')
+#green_birb_pic = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\birb_touch.png')
+sight_pic = pygame.image.load(r'/home/agmui/Desktop/pyImages/sight.png')
 birbs = birb_code.birbs
 pause = True
 

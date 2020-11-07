@@ -1,11 +1,11 @@
+#/usr/bin/env python3
+
 from datetime import datetime
 
 
 def calcutate(next_class_ampm, next_class_hour, next_class_minute):
     now = datetime.now()
-    current_hour, current_min, current_sec, next_class_hour, next_class_minute = int(now.strftime("%H")), int(
-        now.strftime("%M")), int(
-        now.strftime("%S")), int(next_class_hour), int(next_class_minute)
+    current_hour, current_min, current_sec, next_class_hour, next_class_minute = int(now.strftime("%H")), int(now.strftime("%M")), int(now.strftime("%S")), int(next_class_hour), int(next_class_minute)
 
     # now time given in military
 

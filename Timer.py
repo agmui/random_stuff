@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pygame
 import time
 import sys
@@ -5,10 +7,8 @@ from datetime import datetime
 from tkinter import *
 import playsound
 import threading
-
-sys.path.append('C:/Users/antho/AppData/Local/Programs/Python/Python38-32/Small_projects/calculate_time')
-
 import calculate_time
+
 
 hour, minute, ampm = "0", "0", 0
 width, hight = 300, 200
@@ -19,7 +19,7 @@ count, count2 = 10000, 100000
 def text(hour, minute, sec):
     font = pygame.font.SysFont(None, 40)
     img = font.render(str(hour) + ":" + str(minute) + ":" + str(sec), True, (255, 255, 255))
-    GD.blit(img, (infoObject.current_w / 2, infoObject.current_h / 2 + 50))
+    GD.blit(img, (2048 / 2, 1080 / 2 + 50))
 
 
 def timer(hour, minute, sec):
@@ -37,20 +37,20 @@ def timer(hour, minute, sec):
     else:
         img = font.render(str(hour) + ":" + str(minute) + ":" + str(sec), True, (255, 255, 255))
 
-    GD.blit(img, (infoObject.current_w / 2, infoObject.current_h / 2))
+    GD.blit(img, (2048 / 2, 1080 / 2))
 
 
 def play_sound():
-    playsound.playsound(r"C:\Users\antho\Desktop\pyImages\sempai.mp3", True)
-    playsound.playsound(r"C:\Users\antho\Desktop\pyImages\sempai_2.mp3", True)
+    playsound.playsound(r"/home/agmui/Desktop/pyImages/sempai.mp3", True)
+    playsound.playsound(r"/home/agmui/Desktop/pyImages/sempai_2.mp3", True)
 
 
 def flash_screen(flip_):
     # time.sleep(0.5)
     if flip_:
-        pygame.draw.rect(GD, (100, 100, 100), (0, 0, infoObject.current_w, infoObject.current_h))
+        pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1080))
     else:
-        pygame.draw.rect(GD, (255, 0, 0), (0, 0, infoObject.current_w, infoObject.current_h))
+        pygame.draw.rect(GD, (255, 0, 0), (0, 0, 2048, 1080))
 
 
 def quit_button(x, y, width, hight):
@@ -159,10 +159,9 @@ while True:
     pygame.init()
     clock = pygame.time.Clock()  # FPS stuff
     crashed = False
-    infoObject = pygame.display.Info()
-    GD = pygame.display.set_mode((infoObject.current_w, infoObject.current_h))
+    GD = pygame.display.set_mode((2048, 1080))
     GD = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
-    pygame.draw.rect(GD, (100, 100, 100), (0, 0, infoObject.current_w, infoObject.current_h))
+    pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1080))
 
     while not crashed:  # makes window not buggy
         for event in pygame.event.get():
@@ -172,10 +171,11 @@ while True:
                 if event.key == pygame.K_SPACE:
                     alarm = False
 
-        pygame.draw.rect(GD, (100, 100, 100), (0, 0, infoObject.current_w, infoObject.current_h))
+        pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1080))
 
         if stop:
             t1 = threading.Thread(target=play_sound)
+
             count += 1
             if count >= 85:
                 t1.start()
