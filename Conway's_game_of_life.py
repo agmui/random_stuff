@@ -38,7 +38,7 @@ def update_grid():
                 draw_white_squares(i, i2)
 
 
-def text():
+def text():  # amazing pause art
     font = pygame.font.SysFont(None, 60)
     img = font.render("ll", True, (255, 255, 255))
     GD.blit(img, (20, 20))

@@ -41,8 +41,8 @@ def timer(hour, minute, sec):
 
 
 def play_sound():
-    playsound.playsound(r"/home/agmui/Desktop/pyImages/sempai.mp3", True)
-    playsound.playsound(r"/home/agmui/Desktop/pyImages/sempai_2.mp3", True)
+    playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai.mp3", True)
+    playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai_2.mp3", True)
 
 
 def flash_screen(flip_):
@@ -121,9 +121,9 @@ class window:
 
     def inputs(self):
         click = window()
-        textentry_hour = Entry(root, width=5, bg="white")
+        textentry_hour = Entry(root, width=5, bg="gray")
         textentry_hour.place(x=60, y=50)
-        textentry_minute = Entry(root, width=5, bg="white")
+        textentry_minute = Entry(root, width=5, bg="gray")
         textentry_minute.place(x=118, y=50)
         ampm = IntVar()
         Radiobutton(root, activebackground="gray", activeforeground="white", text="AM", variable=ampm,
