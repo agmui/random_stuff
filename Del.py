@@ -1,4 +1,4 @@
-x = (1,3)
+x = []
 
-for i in x:
-    print(i)
+x.append("|")
+print(x)

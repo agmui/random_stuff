@@ -1,9 +1,12 @@
+
+input = [1, 2, 3, 4]
+l = []
+
 def collatz_Conjecture(n):
     if n / 2 == int(n / 2):
         return n / 2
     else:
         return 3 * n + 1
-
 
 def function(n):
     send = -1
@@ -11,42 +14,18 @@ def function(n):
         send = 3 * (n + 1)
     return n * 2, send
 
-
-class Node:
-
-    def __init__(self, data):
-
-        self.left = None
-        self.right = None
-        self.data = data
-
-    def insert(self, data):
-        # Compare the new value with the parent node
-        if self.data:
-            if data < self.data:
-                if self.left is None:
-                    self.left = Node(data)
-                else:
-                    self.left.insert(data)
-            elif data > self.data:
-                if self.right is None:
-                    self.right = Node(data)
-                else:
-                    self.right.insert(data)
-        else:
-            self.data = data
-
-    # Print the tree
-    def PrintTree(self):
-        if self.left:
-            self.left.PrintTree()
-        print(self.data),
-        if self.right:
-            self.right.PrintTree()
+def plzhelp(past, thing):
+    input, input2 = thing
+    l.append((past, input, input2))
+    if input is not None and input2 is not None:
+        plzhelp(input, function(input))
+        plzhelp(input2, function(input2))
+    elif input is not None and input2 is None:
+        plzhelp(input, function(input))
+    else:
+        plzhelp(input2, function(input))
 
 
-# Use the insert method to add nodes
-root = Node(1)
-root.insert(6)
-
-root.PrintTree()
+print(function(input[1]))
+for i in range(len(input)):
+    plzhelp(1, function(input[i]))
