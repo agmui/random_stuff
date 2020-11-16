@@ -1,6 +1,5 @@
+l = [(1, False)]
 
-input = [1, 2, 3, 4]
-l = []
 
 def collatz_Conjecture(n):
     if n / 2 == int(n / 2):
@@ -8,24 +7,39 @@ def collatz_Conjecture(n):
     else:
         return 3 * n + 1
 
+
 def function(n):
-    send = -1
-    if (n - 1) / 3 == int((n - 1) / 3) or (n - 1) / 3 != 0 or (n - 1) / 3 != 1:
-        send = 3 * (n + 1)
+    if (n - 1) / 3 == int((n - 1) / 3) and (n - 1) / 3 != 0 and (n - 1) / 3 != 1:
+        send = int((n - 1) / 3)
+    else:
+        send = None
     return n * 2, send
 
-def plzhelp(past, thing):
+
+def plzhelp(root, thing, i):
     input, input2 = thing
-    l.append((past, input, input2))
-    if input is not None and input2 is not None:
-        plzhelp(input, function(input))
-        plzhelp(input2, function(input2))
-    elif input is not None and input2 is None:
-        plzhelp(input, function(input))
+    l[i] = [root, input, input2, True, -1, -1]
+    # l.append((root, input, input2, True))
+    return input, input2
+
+
+# print(function(1))
+out1_new, out2_new = plzhelp(1, function(1), 0)
+save = 0
+while len(l) < 101:
+    out1, out2 = out1_new, out2_new
+    if out1 is not None and out2 is not None:
+        l.append((out1, False))
+        l.append((out2, False))
+    elif out1 is not None and out2 is None:
+        l.append((out1, False))
     else:
-        plzhelp(input2, function(input))
+        l.append((out2, False))
+    for i in range(save, len(l)):
+        if not l[i][1]:
+            out1_new, out2_new = plzhelp(l[i][0], function(l[i][0]), i)
+            save = i
+            break
 
-
-print(function(input[1]))
-for i in range(len(input)):
-    plzhelp(1, function(input[i]))
+if __name__ == "__main__":
+    print(l)
