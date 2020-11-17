@@ -8,7 +8,10 @@ clock = pygame.time.Clock()  # FPS stuff
 GD = pygame.display.set_mode((200 * 5, 200 * 5))
 crashed = False
 tree = Collatz_Conjecture_code.l
-_ = -1
+_ = -1  # dont use
+line_length = 30
+angle = 10
+
 
 def text(text, x, y):
     font = pygame.font.SysFont(None, 20)
@@ -16,26 +19,35 @@ def text(text, x, y):
     GD.blit(img, (x - 3, y - 6))
 
 
-def draw_circle(old_x, a, num):
+def draw_better_line(GD, pos1, pos2, thicccness):
+    pygame.draw.line(GD, (0, 0, 0), pos1, pos2, thicccness)
+    pygame.draw.line(GD, (250, 250, 250), pos1, pos2, thicccness - 2)
+
+def influwence(x,y):
+    return 1+abs(x-y)/50000
+
+def draw_circle(old_cords, a, num, help_):
     # x should be relative pos of root/ last node
     # a should be relative pos of roo/ last node to find angle
 
     # needs to calc where new pos and angle based on root/ last node
-    # y = a  # ts
-    x, y = old_x*math.sin(a), old_x*math.cos(a) # PLLLZZZZ CHECK IF IN RADS OR DEG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    pygame.draw.circle(GD, (250, 250, 250), (x, y), 5)
-    text(num, x, y)
-    if num/2 == int(num/2):
-        th = a+5
+    a, _ = a
+    old_x, old_y = old_cords
+    if num / 2 == int(num / 2):
+        a = (angle + a)*influwence(num, tree[help_][0])
     else:
-        th = a-5
-    return (x, y), (th,_)
+        a = -1 * angle + a
+    x, y = -line_length * math.sin(a * math.pi / 180) + old_x, line_length * math.cos(a * math.pi / 180) + old_y
+    # pygame.draw.circle(GD, (250, 250, 250), (x, y), 5)
+    # text(num, x, y)
+    draw_better_line(GD, (old_x, old_y), (x, y), 10)
+    return (x, y), (a, _)  # probs needs help
 
 
 def some_pos_function(x):
     for i in range(len(tree)):
         if tree[i][1] == x or tree[i][2] == x:
-            return tree[i][4]
+            return tree[i][4], i
 
 
 def some_angle_function(x):
@@ -46,19 +58,20 @@ def some_angle_function(x):
 
 GD.fill((110, 110, 110))  # draw background
 
-i = 0
-tree[0][4], tree[0][5] = (50, 50), (270, _)
+i = 1
+tree[0][4], tree[0][5] = (400, 400), (270, _)
+draw_circle((450, 401), (270, _), tree[0][0], 0)
 while not crashed:  # makes window not buggy
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             crashed = True
-
-    x, a = some_pos_function(tree[i][0]), some_angle_function(tree[i][0])
-    new_x, new_a = draw_circle(x, a, tree[i][0])
+    x, help_ = some_pos_function(tree[i][0])
+    a=some_angle_function(tree[i][0])
+    new_x, new_a = draw_circle(x, a, tree[i][0], help_)
     tree[i][4], tree[i][5] = new_x, new_a
 
     i += 1
-    time.sleep(1)
+    # time.sleep(0.01)
     pygame.display.update()
     clock.tick(60)
 

@@ -1,5 +1,5 @@
 l = [(1, False)]
-
+len_ = 20000 # controls how big the tree is
 
 def collatz_Conjecture(n):
     if n / 2 == int(n / 2):
@@ -26,7 +26,7 @@ def plzhelp(root, thing, i):
 # print(function(1))
 out1_new, out2_new = plzhelp(1, function(1), 0)
 save = 0
-while len(l) < 101:
+while len(l) < len_:
     out1, out2 = out1_new, out2_new
     if out1 is not None and out2 is not None:
         l.append((out1, False))
