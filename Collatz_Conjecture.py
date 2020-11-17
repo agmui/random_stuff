@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import time
 import math
@@ -20,11 +22,20 @@ def text(text, x, y):
 
 
 def draw_better_line(GD, pos1, pos2, thicccness):
+    help = random.randint(1, 3)
+    if help == 1:
+        color = (50, 168, 82)
+    elif help == 2:
+        color = (92, 209, 124)
+    else:
+        color = (26, 163, 64)
     pygame.draw.line(GD, (0, 0, 0), pos1, pos2, thicccness)
-    pygame.draw.line(GD, (250, 250, 250), pos1, pos2, thicccness - 2)
+    pygame.draw.line(GD, color, pos1, pos2, thicccness - 2)
 
-def influwence(x,y):
-    return 1+abs(x-y)/50000
+
+def influwence(x, y):
+    return 1 + abs(x - y) / 50000
+
 
 def draw_circle(old_cords, a, num, help_):
     # x should be relative pos of root/ last node
@@ -34,7 +45,7 @@ def draw_circle(old_cords, a, num, help_):
     a, _ = a
     old_x, old_y = old_cords
     if num / 2 == int(num / 2):
-        a = (angle + a)*influwence(num, tree[help_][0])
+        a = (angle + a) * influwence(num, tree[help_][0])
     else:
         a = -1 * angle + a
     x, y = -line_length * math.sin(a * math.pi / 180) + old_x, line_length * math.cos(a * math.pi / 180) + old_y
@@ -66,7 +77,7 @@ while not crashed:  # makes window not buggy
         if event.type == pygame.QUIT:
             crashed = True
     x, help_ = some_pos_function(tree[i][0])
-    a=some_angle_function(tree[i][0])
+    a = some_angle_function(tree[i][0])
     new_x, new_a = draw_circle(x, a, tree[i][0], help_)
     tree[i][4], tree[i][5] = new_x, new_a
 
