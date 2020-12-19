@@ -39,11 +39,10 @@ class piece:
         self.img = img
         self.size = self.img.get_size()
 
-    def draw(self, x=0):
-        sprite = py.transform.scale(self.img, (size - 5, size - 5))
-        GD.blit(sprite, (self.pos[0] + 3, self.pos[1] + 3))
+    def draw(self):
+        GD.blit(py.transform.scale(self.img, (size - 5, size - 5)), (self.pos[0] + 3, self.pos[1] + 3))
 
-    def move(self, direction, amount=1):
+    def move(self, direction, amount):
         if self.type == 'p':
             pass
         elif self.type == 'k':
@@ -51,10 +50,23 @@ class piece:
         elif self.type == 'b':
             pass
         elif self.type == 'r':
-            pass
+            if direction[0] == -1:
+                self.pos = (self.pos[0], self.pos[1] - 50 * amount[0])
+            elif direction[0] == 1:
+                self.pos = (self.pos[0], self.pos[1] + 50 * amount[0])
+            elif direction[1] == -1:
+                self.pos = (self.pos[0] - 50 * amount[1], self.pos[1])
+            elif direction[1] == 1:
+                self.pos = (self.pos[0] + 50 * amount[1], self.pos[1])
         elif self.type == 'q':
-            if direction == 'U':
-                self.pos = (self.pos[0], self.pos[1] - 50)
+            if direction[0] == -1:
+                self.pos = (self.pos[0], self.pos[1] - 50 * amount[0])
+            elif direction[0] == 1:
+                self.pos = (self.pos[0], self.pos[1] + 50 * amount[0])
+            if direction[1] == -1:
+                self.pos = (self.pos[0] - 50 * amount[1], self.pos[1])
+            elif direction[1] == 1:
+                self.pos = (self.pos[0] + 50 * amount[1], self.pos[1])
         elif self.type == 'King':
             if direction[0] == 1:
                 self.pos = (self.pos[0] + 50, self.pos[1])
@@ -66,6 +78,7 @@ class piece:
                 self.pos = (self.pos[0], self.pos[1] - 50)
 
     def move_check(self, mx, my):
+        direction, amount = [0, 0], [0, 0]
         if self.type == 'p':
             pass
         elif self.type == 'k':
@@ -73,12 +86,28 @@ class piece:
         elif self.type == 'b':
             pass
         elif self.type == 'r':
-            pass
+            if self.pos[0] <= mx <= self.pos[0] + 50:
+                direction[0] = (1 if my >= self.pos[1] else -1)
+                amount[0] = abs(int(my / 50) - int(self.pos[1] / 50))
+            elif self.pos[1] <= my <= self.pos[1] + 50:
+                direction[1] = (1 if mx >= self.pos[0] else -1)
+                amount[1] = abs(int(mx / 50) - int(self.pos[0] / 50))
+            else:
+                return False
+            return direction, amount
         elif self.type == 'q':
-            return 1, 1
+            if self.pos[0] <= mx <= self.pos[0] + 50:
+                direction[0] = (1 if my >= self.pos[1] else -1)
+                amount[0] = abs(int(my/50)-int(self.pos[1]/50))
+            if self.pos[1] <= my <= self.pos[1] + 50:
+                direction[1] = (1 if mx >= self.pos[0] else -1)
+                amount[1] = abs(int(mx / 50) - int(self.pos[0] / 50))
+            if direction == [0, 0]:
+                return False
+            return direction, amount
         elif self.type == 'King':
             if abs(int(mx / 50) - int(self.pos[0] / 50)) <= 1 and abs(int(my / 50) - int(self.pos[1] / 50)) <= 1:
-                return int(mx / 50) - int(self.pos[0] / 50), int(my / 50) - int(self.pos[1] / 50)
+                return (int(mx / 50) - int(self.pos[0] / 50), int(my / 50) - int(self.pos[1] / 50)), 1
 
 
 def init_board():
@@ -102,22 +131,22 @@ def UI():
 
 # set up chess pieces
 Bking = piece((size * 4, 0), ('B', 'King'), Bking_pic)
-Bqueen = piece((size * 3, 0), ('B', 'King'), Bqueen_pic)
+Bqueen = piece((size * 3, 0), ('B', 'q'), Bqueen_pic)
 Bbishop1 = piece((size * 2, 0), ('B', 'King'), Bbishop_pic)
 Bknight1 = piece((size * 1, 0), ('B', 'King'), Bknight_pic)
-Brook1 = piece((size * 0, 0), ('B', 'King'), Brook_pic)
+Brook1 = piece((size * 0, 0), ('B', 'r'), Brook_pic)
 Bbishop2 = piece((size * 5, 0), ('B', 'King'), Bbishop_pic)
 Bknight2 = piece((size * 6, 0), ('B', 'King'), Bknight_pic)
-Brook2 = piece((size * 7, 0), ('B', 'King'), Brook_pic)
+Brook2 = piece((size * 7, 0), ('B', 'r'), Brook_pic)
 Bpawn1 = piece((size * 0, size * 1), ('B', 'King'), Bpawn_pic)
 Wking = piece((size * 4, size * 7), ('W', 'King'), Wking_pic)
-Wqueen = piece((size * 3, size * 7), ('W', 'King'), Wqueen_pic)
+Wqueen = piece((size * 3, size * 7), ('W', 'q'), Wqueen_pic)
 Wbishop1 = piece((size * 2, size * 7), ('W', 'King'), Wbishop_pic)
 Wknight1 = piece((size * 1, size * 7), ('W', 'King'), Wknight_pic)
-Wrook1 = piece((size * 0, size * 7), ('W', 'King'), Wrook_pic)
+Wrook1 = piece((size * 0, size * 7), ('W', 'r'), Wrook_pic)
 Wbishop2 = piece((size * 5, size * 7), ('W', 'King'), Wbishop_pic)
 Wknight2 = piece((size * 6, size * 7), ('W', 'King'), Wknight_pic)
-Wrook2 = piece((size * 7, size * 7), ('W', 'King'), Wrook_pic)
+Wrook2 = piece((size * 7, size * 7), ('W', 'r'), Wrook_pic)
 Wpawn1 = piece((size * 0, size * 6), ('W', 'King'), Wpawn_pic)
 
 # list of all pieces
@@ -141,11 +170,11 @@ def main():
                         select = pieces_
                         break
                     else:
-                        print('off', pieces_.type)
+                        #print('off', pieces_.type)
                         if select != 0 and select.move_check(mx, my):  # check if possible pos
-                            # direction, amount = select.move_check(mx, my)
-                            # print(direction, amount)
-                            select.move(select.move_check(mx, my))
+                            direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
+                            print(direction, amount)
+                            select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
                             break
                         else:
                             select = 0
