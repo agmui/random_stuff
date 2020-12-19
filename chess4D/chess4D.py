@@ -1,3 +1,4 @@
+import os
 import pygame as py
 import time
 
@@ -11,18 +12,18 @@ GD = py.display.set_mode((size * 8 + 200, size * 8))
 crashed = False
 select = 0
 
-Bking_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Bking.png')
-Bqueen_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Bqueen.png')
-Bbishop_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Bbishop.png')
-Bknight_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Bknight.png')
-Brook_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Brook.png')
-Bpawn_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Bpawn.png')
-Wking_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wking.png')
-Wqueen_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wqueen.png')
-Wbishop_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wbishop.png')
-Wknight_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wknight.png')
-Wrook_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wrook.png')
-Wpawn_pic = py.image.load(r'C:\Users\antho\Documents\GitHub\random_stuff\chess4D\assets\Wpawn.png')
+Bking_pic =   py.image.load(os.path.join("assets", "Bking.png"))
+Bqueen_pic =  py.image.load(os.path.join("assets", "Bqueen.png"))
+Bbishop_pic = py.image.load(os.path.join("assets", "Bbishop.png"))
+Bknight_pic = py.image.load(os.path.join("assets", "Bknight.png"))
+Brook_pic =   py.image.load(os.path.join("assets", "Brook.png"))
+Bpawn_pic =   py.image.load(os.path.join("assets", "Bpawn.png"))
+Wking_pic =   py.image.load(os.path.join("assets", "Wking.png"))
+Wqueen_pic =  py.image.load(os.path.join("assets", "Wqueen.png"))
+Wbishop_pic = py.image.load(os.path.join("assets", "Wbishop.png"))
+Wknight_pic = py.image.load(os.path.join("assets", "Wknight.png"))
+Wrook_pic =   py.image.load(os.path.join("assets", "Wrook.png"))
+Wpawn_pic =   py.image.load(os.path.join("assets", "Wpawn.png"))
 
 """Bking_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bking.png')
 Bqueen_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bqueen.png')
