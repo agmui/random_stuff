@@ -1,3 +1,3 @@
-l = [3,2,1,'hi']
-for i in l:
-    print(i)
+x = 0
+if x == (0 or 9):
+    print(1)
