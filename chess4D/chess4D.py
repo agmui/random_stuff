@@ -2,8 +2,6 @@ import os
 import pygame as py
 import time
 
-# from pygame.locals import *
-
 py.init()
 py.display.set_caption('chess')
 clock = py.time.Clock()  # FPS stuff
@@ -11,36 +9,20 @@ size = 50
 GD = py.display.set_mode((size * 8 + 200, size * 8))
 crashed = False
 select = 0
+action = False
 
-Bking_pic =   py.image.load(os.path.join("assets", "Bking.png"))
-Bqueen_pic =  py.image.load(os.path.join("assets", "Bqueen.png"))
+Bking_pic = py.image.load(os.path.join("assets", "Bking.png"))
+Bqueen_pic = py.image.load(os.path.join("assets", "Bqueen.png"))
 Bbishop_pic = py.image.load(os.path.join("assets", "Bbishop.png"))
 Bknight_pic = py.image.load(os.path.join("assets", "Bknight.png"))
-Brook_pic =   py.image.load(os.path.join("assets", "Brook.png"))
-Bpawn_pic =   py.image.load(os.path.join("assets", "Bpawn.png"))
-Wking_pic =   py.image.load(os.path.join("assets", "Wking.png"))
-Wqueen_pic =  py.image.load(os.path.join("assets", "Wqueen.png"))
+Brook_pic = py.image.load(os.path.join("assets", "Brook.png"))
+Bpawn_pic = py.image.load(os.path.join("assets", "Bpawn.png"))
+Wking_pic = py.image.load(os.path.join("assets", "Wking.png"))
+Wqueen_pic = py.image.load(os.path.join("assets", "Wqueen.png"))
 Wbishop_pic = py.image.load(os.path.join("assets", "Wbishop.png"))
 Wknight_pic = py.image.load(os.path.join("assets", "Wknight.png"))
-Wrook_pic =   py.image.load(os.path.join("assets", "Wrook.png"))
-Wpawn_pic =   py.image.load(os.path.join("assets", "Wpawn.png"))
-
-"""Bking_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bking.png')
-Bqueen_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bqueen.png')
-Bbishop_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bbishop.png')
-Bknight_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bknight.png')
-Brook_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Brook.png')
-Bpawn_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Bpawn.png')
-Wking_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wking.png')
-Wqueen_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wqueen.png')
-Wbishop_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wbishop.png')
-Wknight_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wknight.png')
-Wrook_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wrook.png')
-Wpawn_pic = py.image.load('/Users/Anthony/PycharmProjects/random_stuff/chess4D/assets/Wpawn.png')"""
-
-
-# sprite_list = [Bking_pic, Bqueen_pic, Bbishop_pic, Bknight_pic, Brook_pic, Bpawn_pic, Wking_pic, Wqueen_pic,
-#               Wbishop_pic, Wknight_pic, Wrook_pic, Wpawn_pic]
+Wrook_pic = py.image.load(os.path.join("assets", "Wrook.png"))
+Wpawn_pic = py.image.load(os.path.join("assets", "Wpawn.png"))
 
 
 class piece:
@@ -51,34 +33,10 @@ class piece:
         self.size = self.img.get_size()
 
     def draw(self):
-        GD.blit(py.transform.scale(self.img, (size - 5, size - 5)), (self.pos[0] + 3, self.pos[1] + 3))
+        GD.blit(py.transform.scale(self.img, (size - 17, size - 17)), (self.pos[0] + 8, self.pos[1] + 8))
 
     def move(self, direction, amount):
-        if self.type == 'p':
-            self.pos = (self.pos[0] + size * direction[0], self.pos[1] + size * direction[1])
-        elif self.type == 'k':
-            self.pos = (self.pos[0] + size * direction[0], self.pos[1] + size * direction[1])
-        elif self.type == 'b':
-            self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1] + size * amount * direction[0])
-        elif self.type == 'r':
-            self.pos = (self.pos[0] - size * direction[0], self.pos[1] - size * direction[1])                               # try to make all pices use one move function
-
-            """if direction[0] != 0:
-                self.pos = (self.pos[0], self.pos[1] + size * amount * direction[0])
-            elif direction[1] != 0:
-                self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1])"""
-        elif self.type == 'q':
-            if direction[0] != 0 and direction[1] != 0:
-                self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1] + size * amount * direction[0])
-            elif direction[0] != 0:
-                self.pos = (self.pos[0], self.pos[1] + size * amount * direction[0])
-            elif direction[1] != 0:
-                self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1])
-        elif self.type == 'King':
-            if direction[0] != 0:
-                self.pos = (self.pos[0] + size * direction[0], self.pos[1])
-            if direction[1] != 0:
-                self.pos = (self.pos[0], self.pos[1] + size * direction[1])
+        self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1] + size * amount * direction[0])
 
     def move_check(self, mx, my):
         direction, amount = [0, 0], [0, 0]
@@ -86,9 +44,9 @@ class piece:
             direction = abs(int(my / size) - int(self.pos[1] / size)), abs(int(mx / size) - int(self.pos[0] / size))
             if direction[0] == 1 and direction[1] == 0:
                 pass
-            elif self.type == 'B' and self.pos[1] == 1 and direction == 2 and direction[1] == 0:
+            elif self.type == 'B' and self.pos[1] == 1 and direction[0] == 2 and direction[1] == 0:
                 pass
-            elif self.type == 'W' and self.pos[1] == 6 and direction == 2 and direction[1] == 0:
+            elif self.type == 'W' and self.pos[1] == 6 and direction[0] == 2 and direction[1] == 0:
                 pass
             else:
                 return False
@@ -98,10 +56,10 @@ class piece:
                 if abs(int(my / size) - int(self.pos[1] / size)) / abs(
                         int(mx / size) - int(self.pos[0] / size)) == 2 or abs(
                     int(my / size) - int(self.pos[1] / size)) / abs(int(mx / size) - int(self.pos[0] / size)) == 1 / 2:
-                    direction = int(mx / size) - int(self.pos[0] / size), int(my / size) - int(self.pos[1] / size)
+                    direction = int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)
                 else:
                     return False
-                return direction, amount
+                return direction, 1
             except:
                 return False
         elif self.type == 'b':
@@ -113,10 +71,10 @@ class piece:
             return direction, amount
         elif self.type == 'r':
             if self.pos[0] <= mx <= self.pos[0] + size:
-                direction = (1 if my >= self.pos[1] else -1), 1
+                direction = (1 if my >= self.pos[1] else -1), 0
                 amount = abs(int(my / size) - int(self.pos[1] / size))
             elif self.pos[1] <= my <= self.pos[1] + size:
-                direction = 1, (1 if mx >= self.pos[0] else -1)
+                direction = 0, (1 if mx >= self.pos[0] else -1)
                 amount = abs(int(mx / size) - int(self.pos[0] / size))
             else:
                 return False
@@ -138,7 +96,7 @@ class piece:
         elif self.type == 'King':
             if abs(int(mx / size) - int(self.pos[0] / size)) <= 1 and abs(
                     int(my / size) - int(self.pos[1] / size)) <= 1:
-                return (int(mx / size) - int(self.pos[0] / size), int(my / size) - int(self.pos[1] / size)), 1
+                return (int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)), 1
 
 
 def init_board():
@@ -152,12 +110,26 @@ def init_board():
     for pieces_ in p:
         pieces_.draw()
 
+    font = py.font.Font('freesansbold.ttf', 10)
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
+    for i in range(9):
+        text = font.render(letters[i], True, (227, 187, 154) if i % 2 == 0 else (201, 123, 58))
+        GD.blit(text, (size * i + 40, size * 8 - 10))
+        text = font.render(str(i), True, (201, 123, 58) if i % 2 == 0 else (227, 187, 154))
+        GD.blit(text, (size - 45, size * (8 - i) + 5))
 
-def UI():
+
+def UI(action):
     py.draw.rect(GD, (255, 255, 255), (size * 8, 0, 200, size * 8))
     font = py.font.Font('freesansbold.ttf', 32)
     text = font.render('Moves:', True, (0, 0, 0))
     GD.blit(text, (size * 8 + 10, 0))
+    if action:
+        font = py.font.Font('freesansbold.ttf', 14)
+        text = font.render(f"{action[0]}{action[1][0]/50}{action[1][1]/50}", True, (0, 0, 0))
+        GD.blit(text, (size * 8 + 10, 50))
+
+
 
 
 # set up chess pieces
@@ -186,7 +158,7 @@ p = [Bking, Bqueen, Bbishop1, Bknight1, Brook1, Bbishop2, Bknight2, Brook2, Bpaw
 
 
 def main():
-    global py, crashed, size, select
+    global py, crashed, size, select, action
     while not crashed:  # makes window not buggy
         for event in py.event.get():
             if event.type == py.QUIT:
@@ -205,7 +177,8 @@ def main():
                     direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
                     print(direction, amount)
                     select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
-                    print('selected', select.type)  # ts
+                    print('selected', select.type)
+                    action = select.type, select.pos
                 elif found:
                     pass
                 else:
@@ -213,7 +186,7 @@ def main():
                     print('selected none')
 
         init_board()
-        UI()
+        UI(action)
 
         py.display.update()
         clock.tick(60)
