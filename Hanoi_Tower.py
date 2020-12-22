@@ -1,4 +1,4 @@
-n = int(input("input # of rings: "))
+"""n = int(input("input # of rings: "))
 main = []
 past = [1]
 steps = [1]
@@ -86,4 +86,38 @@ for i in range(len(steps)):
         data = data + rings
     else:
         print(f'{rings} step: {i + 1}')
-        data = data + rings
+        data = data + rings"""
+
+rings = [[1, 2], [], []]
+
+
+def move(from_, to):
+    global rings
+    try:
+        rings[to].insert(0, rings[from_][0])
+        rings[from_].pop(0)
+    except:
+        print('Illegal move your code don\'t work boi')
+
+
+move(0, 1)
+print(rings)
+"""
+3(in3 + 2(in2 + 1(in1)))
+1, 0, 0 move(0, 2)
+0, 0, 1
+
+1 2, 0, 0 move(0, 1)
+2, 1, 0 move(0, 2)
+0, 1, 2 move(1, 2)
+0, 0, 1 2
+
+1 2 3, 0, 0 move(0, 2)
+2 3, 0, 1 move(0, 1)
+3, 2, 1 move(2, 1)
+3, 1 2, 0 move(0, 2)
+0, 1 2, 3 move(1, 0
+1, 2, 3 m(1, 2
+1, 0, 2 3 m(0, 2
+0, 0, 1 2 3
+"""
