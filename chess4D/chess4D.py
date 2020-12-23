@@ -126,10 +126,8 @@ def UI(action):
     GD.blit(text, (size * 8 + 10, 0))
     if action:
         font = py.font.Font('freesansbold.ttf', 14)
-        text = font.render(f"{action[0]}{action[1][0]/50}{action[1][1]/50}", True, (0, 0, 0))
+        text = font.render(f"{action[0]}{action[1][0] / 50}{action[1][1] / 50}", True, (0, 0, 0))
         GD.blit(text, (size * 8 + 10, 50))
-
-
 
 
 # set up chess pieces

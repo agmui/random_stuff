@@ -88,36 +88,39 @@ for i in range(len(steps)):
         print(f'{rings} step: {i + 1}')
         data = data + rings"""
 
-rings = [[1, 2], [], []]
+
+def move(r, LR):
+    index = -1
+    for i in rings:
+        index += 1
+        if r in i:
+            if LR == 'R':
+                if index != 2:
+                    rings[index + 1].insert(0, i[0])
+                else:
+                    rings[0].insert(0, i[0])
+                rings[index].pop(0)
+            elif LR == 'L':
+                if index != 0:
+                    rings[index - 1].insert(0, i[0])
+                else:
+                    rings[2].insert(0, i[0])
+                rings[index].pop(0)
+            break
 
 
-def move(from_, to):
-    global rings
-    try:
-        rings[to].insert(0, rings[from_][0])
-        rings[from_].pop(0)
-    except:
-        print('Illegal move your code don\'t work boi')
+# move(1, 'R')
+def main(x):
+    if x == 0:
+        pass
+    else:
+        main(x - 1)
+        move(x, 'R' if x % 2 == 0 else 'L')
+        main(x - 1)
 
 
-move(0, 1)
+x = 5
+rings = [[1, 2, 3, 4, 5], [], []]
+for i in range(2 if x % 2 == 0 else 1):
+    main(x)
 print(rings)
-"""
-3(in3 + 2(in2 + 1(in1)))
-1, 0, 0 move(0, 2)
-0, 0, 1
-
-1 2, 0, 0 move(0, 1)
-2, 1, 0 move(0, 2)
-0, 1, 2 move(1, 2)
-0, 0, 1 2
-
-1 2 3, 0, 0 move(0, 2)
-2 3, 0, 1 move(0, 1)
-3, 2, 1 move(2, 1)
-3, 1 2, 0 move(0, 2)
-0, 1 2, 3 move(1, 0
-1, 2, 3 m(1, 2
-1, 0, 2 3 m(0, 2
-0, 0, 1 2 3
-"""
