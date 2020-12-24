@@ -10,6 +10,7 @@ GD = py.display.set_mode((size * 8 + 200, size * 8))
 crashed = False
 select = 0
 action = False
+turn = 'W'
 
 Bking_pic = py.image.load(os.path.join("assets", "Bking.png"))
 Bqueen_pic = py.image.load(os.path.join("assets", "Bqueen.png"))
@@ -98,6 +99,9 @@ class piece:
                     int(my / size) - int(self.pos[1] / size)) <= 1:
                 return (int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)), 1
 
+    def check_touching_color(self, mx, my):
+        pass
+
 
 def init_board():
     for i in range(8):
@@ -156,7 +160,7 @@ p = [Bking, Bqueen, Bbishop1, Bknight1, Brook1, Bbishop2, Bknight2, Brook2, Bpaw
 
 
 def main():
-    global py, crashed, size, select, action
+    global py, crashed, size, select, action, turn
     while not crashed:  # makes window not buggy
         for event in py.event.get():
             if event.type == py.QUIT:
@@ -166,17 +170,22 @@ def main():
                 found = False
                 for pieces_ in p:
                     x, y = pieces_.pos
-                    if x <= mx <= x + size and y <= my <= y + size:
-                        print('on', pieces_.type)
+                    if x <= mx <= x + size and y <= my <= y + size and pieces_.color == turn:
+                        print('selected', pieces_.type)
                         select = pieces_
                         found = True
                         break
                 if select != 0 and found == False and select.move_check(mx, my):  # check if possible pos
+                    if select.check_touching_color(mx, my):
+                        print(pieces_.type, "eat")
                     direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
-                    print(direction, amount)
                     select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
-                    print('selected', select.type)
+                    print('moved', select.type, "to: ", direction, amount)
                     action = select.type, select.pos
+                    turn = 'B' if turn == 'W' else 'W'
+                    print('turn:', turn)
+                    select = 0
+                    print('selected none')
                 elif found:
                     pass
                 else:
