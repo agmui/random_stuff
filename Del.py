@@ -1,183 +1,32 @@
-def sum(n):
-    if n == 0:
-        return 0
-    else:
-        return sum(n - 1) + n
+class myc:
+    def __init__(self):
+        self.x = 0
+    def add(self,y):
+        self.x += y
+
+import pygame
+
+pygame.init()
+clock = pygame.time.Clock()  # FPS stuff
+GD = pygame.display.set_mode((50, 50))
+crashed = False
+hi = False
+while not crashed:  # makes window not buggy
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            crashed = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                n.add(2)
+                hi = True
+                print(n.x)
+        GD.fill((110, 110, 110))  # draw background
+        n = myc()
+        if hi:
+            n.add(10)
 
 
-# print(sum(4,2))
+    pygame.display.update()
+    clock.tick(60)
 
-
-def grid(n, m):
-    if n == 1 or m == 1:
-        return 1
-    else:
-        return grid(n - 1, m) + grid(n, m - 1)
-
-
-# print(grid(4,2))
-
-def count(n, m):
-    if n == 0:
-        return 1
-    if m == 0 or n < 0:
-        return 0
-    else:
-        return count(n, m - 1) + count(n - m, m)
-
-
-print(count(6, 4))
-
-"""
-count(1,1) = 1
-o | o
-o
-count(2,2)
-o o | o o
-o o
-o + o
-count(3,3)
-o o o | o o o
-o o o
-o o + o
-o + o + o
-count(4,4) = count(4,3) + 1 = 5
-
-
-count(1,3) = 1
-o | o o o
-o
-
-count(2,3) = count(1,3) + 1 = 2
-o o | o o o
-o o
-o + o
-
-count(3,3) = count(1,3) + 1 = 3
-o o o
-o o + o
-o + o + o
-
-count(3,2) = 2
-o o o o o | o o
-o o + o
-o + o + o
-
-count(4,2) =count(3,2)+1= 3
-o o o o o | o o
-o o + o o
-o o + o + o
-o + o + o + o
-
-count(5,2) =count(5,2)+0= 3
-o o o o o o| o o
-o o + o o + o
-o o + o + o + o
-o + o + o + o + o 
-
-count(6,2) = count(5,2) + 1 = 4
-o o o o o o| o o
-o o + o o + o o
-o o + o o + o + o
-o o + o + o + o + o
-o + o + o + o + o + o
-
-
-count(6,1) = 1
-o o o o o o| o
-o + o + o + o + o + o
-
-count(6,2) = count(6,1) + 3 = 4
-o o o o o o| o o
-o o + o o + o o
-o o + o o + o + o
-o o + o + o + o + o
-o + o + o + o + o + o
-
-count(6,3) = count(6,2) + 3 = 7
-o o o o o o| o o o
-o o o + o o o
-o o o + o o + o
-o o o + o + o + o
-o o + o o + o o + o
-o o + o o + o + o + o
-o o + o + o + o + o + o
-o + o + o + o + o + o + o
-
-count(6,4) = count(6,3) + 2 = 9
-o o o o o o| o o o o
-o o o o + o o
-o o o o + o + o
-o o o + o o o + o
-o o o + o o + o + o
-o o o + o + o + o + o
-o o + o o + o o + o + o
-o o + o o + o + o + o + o
-o o + o + o + o + o + o + o
-o + o + o + o + o + o + o + o
-
-count(6,5) = count(6,4) + 1 = 10
-o o o o o o| o o o o o
-o o o o o + o
-o o o o + o o
-o o o o + o + o
-o o o + o o o
-o o o + o o + o
-o o o + o + o + o
-o o + o o + o o
-o o + o o + o + o
-o o + o + o + o + o
-o + o + o + o + o + o
-
-count(6,6) = count(6,5) + 1 = 11
-
-count(5,5) = 7
-
-count(2,1) = 1
-o o| o
-o + o
-
-count(2,2) = count(2,1) + 1
-o o | o o
-o o
-o + o
-
-count(2,3) = count(2,2) + 1
-o o | o o
-o o
-o o + o
-o + o + o
-
-
-count(3,1) = 1
-o o o| o
-o + o + o
-
-count(3,2) = count(3,1) + 1
-o o o | o o
-o o + o
-o + o + o
-
-count(3,3) = count(3,2) + 1
-o o o|o o o
-o o o
-o o + o
-o + o + o
-
-count(4,1) = 1
-o + o + o + o
-
-count(4,2) = count(4,1) + 2 = 3
-o o + o o
-o o + o + o
-o + o + o + o
-
-count(4,3) = count(4,2) + 1 = 4
-o o o + o
-o o + o o
-o o + o + o
-o + o + o + o
-
-count(4,4) = count(4,3) + 1 = 5
-
-"""
+pygame.quit()
