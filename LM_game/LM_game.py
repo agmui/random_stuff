@@ -11,7 +11,7 @@ fire = False
 t = 1 / 60
 thrust = 20
 
-LM = py.image.load(os.path.join("assets", "LM.png"))
+LM = py.image.load(os.path.join("LM_game", "LM.png"))
 
 
 class Player:
