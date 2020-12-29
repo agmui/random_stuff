@@ -19,18 +19,18 @@ class Player:
         self.fuel = fuel
         self.LM = LM
 
-    def draw(self, size=100):
-        self.LM = py.transform.rotate(self.LM, self.angle)
-        GD.blit(self.LM, (self.pos[0], self.pos[1]))
+    def draw(self):
+        img_copy = py.transform.rotate(self.LM, - self.angle)
+        GD.blit(img_copy, (self.pos[0] - int(img_copy.get_width() / 2), self.pos[1] - int(img_copy.get_height() / 2)))
         # GD.blit(py.transform.scale(LM, (size, size)), (self.pos[0], self.pos[1]))
 
     def math(self):
         pass
 
-    def tilt(self):
-        self.angle += 10
-        print(self.angle)
+    def tilt(self, x):
+        self.angle += x
 
+player = Player(100)
 
 def main():
     global crashed
@@ -40,16 +40,13 @@ def main():
                 crashed = True
             if event.type == py.KEYDOWN:
                 if event.key == py.K_LEFT:
-
+                    player.tilt(10)
                 elif event.key == py.K_RIGHT:
-                    player.angle -= 10
-                    print(player.angle)
+                    player.tilt(-10)
                 elif event.key == py.K_DOWN:
                     pass
 
         GD.fill((255, 255, 255))  # draw background
-
-        player = Player(100)
 
         player.draw()
 
