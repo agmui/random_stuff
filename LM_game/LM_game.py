@@ -5,29 +5,29 @@ import pygame as py
 py.init()
 py.display.set_caption('LM game')
 clock = py.time.Clock()  # FPS stuff
-GD = py.display.set_mode((1800, 2 * 500))
+GD = py.display.set_mode((1800, 1000))
 crashed = False
 fire = False
 t = 1 / 60
 thrust = 20
 
-LM = py.image.load(os.path.join("assets", "LM.png"))
-LM_mask = py.mask.from_surface(LM)
-stage = py.image.load(os.path.join("assets", "stage.png"))
-stage_mask = py.mask.from_surface(stage)
 
-
-class Player:
+class Player:#(py.sprite.Sprite):
     def __init__(self, fuel):
+        #py.sprite.Sprite.__init__(self)
         self.pos = [100, 100]
         self.angle = 90
-        self.v = [100, 0]
+        self.v = [0, 100]  # ts
         self.acc = [0, 9.81]  # has to be not negative cuz py window
         self.fuel = fuel
-        self.LM = LM
+        self.image = py.image.load(os.path.join("assets", "LM.png")).convert_alpha()
+        self.mask = py.mask.from_surface(self.image)
+        self.img_player_rect = self.image.get_rect()
+        self.img_player_rect.topleft = (self.pos[0],self.pos[1])
+        #self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1]))
 
     def draw(self, fire_, scale=0.035):
-        img = py.transform.rotozoom(self.LM, self.angle - 90, scale)
+        img = py.transform.rotozoom(self.image, self.angle - 90, scale)
         GD.blit(img, (self.pos[0] - int(img.get_width() / 2), self.pos[1] - int(img.get_height() / 2)))
         if fire_:
             py.draw.rect(GD, (255, 0, 0), py.Rect(self.pos[0] - 10, self.pos[1] + 10, 20, 20))
@@ -49,21 +49,30 @@ class Player:
         self.acc[1] = 9.81 - thrust * math.sin(self.angle * (math.pi / 180))
 
     def landed(self):
-        self.v = [self.v[0]/2, 0]
-        self.acc = [self.acc[0]/2, 0]
+        self.v = [self.v[0] / 2, 0]
+        self.acc = [self.acc[0] / 2, 0]
 
 
-class Level:
+class Level:#(py.sprite.Sprite):
     def __init__(self):
-        self.pos = 0, GD.get_height() - stage.get_height()
+        #py.sprite.Sprite.__init__(self)
+        self.scale = 0.7
+        self.image = py.image.load(os.path.join("assets", "stage.png")).convert_alpha()
+        self.mask = py.mask.from_surface(self.image)
+        self.pos = 0, GD.get_height() - self.image.get_height() * self.scale
+        self.img_stage_rect = self.image.get_rect()
+        self.img_stage_rect.topleft = (0, self.pos[1])
+        #self.rect = self.image.get_rect(topleft=(0, 102))
 
     def draw_stage(self):
-        img = py.transform.rotozoom(stage, 0, 1)
+        img = py.transform.rotozoom(self.image, 0, self.scale)
         GD.blit(img, self.pos)
 
 
 player = Player(100)
 level = Level()
+#group = py.sprite.GroupSingle()
+#group.add(player)
 
 
 def main():
@@ -79,6 +88,7 @@ def main():
                 player.tilt(-2)
             if event.key == py.K_UP:
                 fire = True
+                player.pos[1] -= 1  # ts
         if event.type == py.KEYUP:
             if event.key == py.K_UP:
                 player.acc = [0, 9.81]
@@ -86,9 +96,13 @@ def main():
 
         GD.fill((0, 0, 0))  # draw background
 
-        level.draw_stage()
-        if LM_mask.overlap(stage_mask, (int(player.pos[0]-level.pos[0]), int(player.pos[1]-level.pos[1]))):
+        #if py.sprite.spritecollide(level, group, False, collided=py.sprite.collide_mask):
+        offset_x, offset_y = (player.img_player_rect.left - level.img_stage_rect.left), (player.img_player_rect.top - level.img_stage_rect.top)
+        if player.mask.overlap(level.mask, (offset_x, offset_y)) is not None:
             player.landed()
+            GD.fill((255, 255, 255))
+
+        level.draw_stage()
         player.physics()
         player.draw(fire)
         if fire:
