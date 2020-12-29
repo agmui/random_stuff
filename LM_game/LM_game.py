@@ -11,7 +11,7 @@ fire = False
 t = 1 / 60
 thrust = 20
 
-LM = py.image.load(os.path.join("LM_game", "LM.png"))
+LM = py.image.load(os.path.join("assets", "LM.png"))
 
 
 class Player:
@@ -38,7 +38,7 @@ class Player:
             self.pos[i] = self.pos[i] + self.v[i] * t + 0.5 * self.acc[i] * t ** 2
 
     def rocket(self):
-        self.acc[0] = -thrust*math.cos(self.angle*(math.pi/180))
+        self.acc[0] = thrust*math.cos(self.angle*(math.pi/180))
         self.acc[1] = 9.81-thrust*math.sin(self.angle*(math.pi/180))
 
 
@@ -56,11 +56,11 @@ def main():
                 player.tilt(1)
             elif event.key == py.K_RIGHT:
                 player.tilt(-1)
-            elif event.key == py.K_DOWN:
+            elif event.key == py.K_UP:
                 player.rocket()
                 fire = True
         if event.type == py.KEYUP:
-            if event.key == py.K_DOWN:
+            if event.key == py.K_UP:
                 player.acc = [0, 9.81]
                 fire = False
 
