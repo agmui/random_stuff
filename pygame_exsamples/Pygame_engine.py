@@ -21,6 +21,7 @@ while not crashed:  # makes window not buggy
 
 pygame.quit()
 # use dis as example
+# reasearch about python box2d ____________________________________________________<---look here
 # rect function for pos and size
 # imports image in classes
 """
