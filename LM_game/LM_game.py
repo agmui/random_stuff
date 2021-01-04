@@ -7,12 +7,16 @@ import pygame as py
 py.init()
 py.display.set_caption('LM game')
 clock = py.time.Clock()  # FPS stuff
-GD = py.display.set_mode((1800, 1000))
+display_width = 1800
+display_height = 1000
+GD = py.display.set_mode((display_width, display_height))
+GD = py.display.set_mode((0, 0), py.RESIZABLE)
 crashed = False
 fire = False
 t = 1 / 60
 thrust = 20
 grav = 8.8
+
 
 class Player:
     def __init__(self, fuel):
@@ -25,6 +29,7 @@ class Player:
         self.scaled_img = py.transform.rotozoom(self.image, self.angle - 90, self.scale)
         self.mask = py.mask.from_surface(self.image).scale((self.scaled_img.get_width(), self.scaled_img.get_height()))
         self.pos = [100 - self.scaled_img.get_width() / 2, 150 - self.scaled_img.get_height() / 2]
+        self.rect = [self.pos[0], self.pos[1], 0, 0]
 
     def draw(self, fire_):
         self.scaled_img = py.transform.rotozoom(self.image, self.angle - 90, self.scale)
@@ -62,10 +67,35 @@ class Level:
         self.scaled_img = py.transform.rotozoom(self.image, 0, self.scale)
         self.mask = py.mask.from_surface(self.image).scale((self.scaled_img.get_width(), self.scaled_img.get_height()))
         self.pos = 0, GD.get_height() - self.image.get_height() * self.scale
+        self.scroll = 0
+        self.rect = py.Rect(self.pos, (self.scaled_img.get_width(), self.scaled_img.get_height()))
 
-    def draw_stage(self):
+    def draw_stage(self, offset):
         for i in range(2):
-            GD.blit(self.scaled_img, (self.pos[0] + i * self.image.get_width(), self.pos[1]))
+            # GD.blit(self.scaled_img, (self.pos[0] + i * self.image.get_width(), self.pos[1]))
+            GD.blit(self.scaled_img, offset(self.scaled_img))
+
+    def stage_scroll(self):
+        pass
+
+
+class Camera(object):
+    def __init__(self, camera_func, width, height):
+        self.camera_func = camera_func
+        self.state = py.Rect(0, 0, width, height)
+
+    def apply(self, target):
+        print(self.state.topleft)
+        return self.state.topleft
+
+    def update(self, target):
+        self.state = self.camera_func(self.state, target.rect)
+
+
+def simple_camera(camera, target_rect):
+    l, t, _, _ = target_rect  # l = left,  t = top
+    _, _, w, h = camera  # w = width, h = height
+    return py.Rect(-l + display_width / 2, -t + display_height / 2, w, h)
 
 
 def level_end():
@@ -74,6 +104,7 @@ def level_end():
 
 player = Player(100)
 level = Level()
+camera = Camera(simple_camera, level.scaled_img.get_width(), level.scaled_img.get_height())
 
 
 def main():
@@ -101,14 +132,15 @@ def main():
             player.landed()
             GD.fill((155, 155, 155))
 
-        level.draw_stage()
+        camera.update(player)  # camera follows player. Note that we could also follow any other sprite
+        level.draw_stage(camera.apply)
         player.physics()
         # player.pos = py.mouse.get_pos()
         player.draw(fire)
         if fire:
             player.rocket()
 
-        #time.sleep(0.5)
+        # time.sleep(0.5)
         py.display.update()
         clock.tick(60)
     py.quit()
