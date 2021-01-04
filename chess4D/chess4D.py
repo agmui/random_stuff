@@ -6,7 +6,7 @@ py.init()
 py.display.set_caption('chess')
 clock = py.time.Clock()  # FPS stuff
 size = 50
-GD = py.display.set_mode((size * 8 + 200, size * 8))
+GD = py.display.set_mode((size * 8 + 220, size * 8))
 crashed = False
 select = 0
 action = False
@@ -99,39 +99,56 @@ class piece:
                     int(my / size) - int(self.pos[1] / size)) <= 1:
                 return (int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)), 1
 
-    def check_touching_color(self, mx, my):
-        pass
+    def check_touching_color(self, mx, my, p):
+        for i in p:
+            if i.pos == (int(mx / 50) * 50, int(my / 50) * 50):
+                i.pos = [-50, -50]
+                return i.color, i.type, self.color
+        return False
 
 
-def init_board():
-    for i in range(8):
-        for j in range(8):
-            if (i + j) % 2 == 0:
-                c = (227, 187, 154)
+class board:
+    def __init__(self):
+        self.moves = []
+
+    def draw(self):  # make board class?
+        for i in range(8):
+            for j in range(8):
+                if (i + j) % 2 == 0:
+                    c = (227, 187, 154)
+                else:
+                    c = (201, 123, 58)
+                py.draw.rect(GD, c, (j * size, i * size, size, size))
+        for pieces_ in p:
+            pieces_.draw()
+
+        font = py.font.Font('freesansbold.ttf', 10)
+        letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
+        for i in range(9):
+            text = font.render(letters[i], True, (227, 187, 154) if i % 2 == 0 else (201, 123, 58))
+            GD.blit(text, (size * i + 40, size * 8 - 10))
+            text = font.render(str(i), True, (201, 123, 58) if i % 2 == 0 else (227, 187, 154))
+            GD.blit(text, (size - 45, size * (8 - i) + 5))
+
+    def UI(self, action):  # make scrolly thing to see past moves
+        py.draw.rect(GD, (255, 255, 255), (size * 8, 0, 220, size * 8))
+        font = py.font.Font('freesansbold.ttf', 32)
+        text = font.render('Moves:', True, (0, 0, 0))
+        GD.blit(text, (size * 8 + 10, 0))
+        py.draw.line(GD, (0, 0, 0), (size * 8 + 115, 40), (size * 8 + 115, size * 8))
+        if action:
+            font = py.font.Font('freesansbold.ttf', 14)
+            if not action[2]:
+                text = font.render(f"{action[0]} to {action[1][0] / 50},{action[1][1] / 50}", True, (0, 0, 0))
             else:
-                c = (201, 123, 58)
-            py.draw.rect(GD, c, (j * size, i * size, size, size))
-    for pieces_ in p:
-        pieces_.draw()
-
-    font = py.font.Font('freesansbold.ttf', 10)
-    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
-    for i in range(9):
-        text = font.render(letters[i], True, (227, 187, 154) if i % 2 == 0 else (201, 123, 58))
-        GD.blit(text, (size * i + 40, size * 8 - 10))
-        text = font.render(str(i), True, (201, 123, 58) if i % 2 == 0 else (227, 187, 154))
-        GD.blit(text, (size - 45, size * (8 - i) + 5))
-
-
-def UI(action):
-    py.draw.rect(GD, (255, 255, 255), (size * 8, 0, 200, size * 8))
-    font = py.font.Font('freesansbold.ttf', 32)
-    text = font.render('Moves:', True, (0, 0, 0))
-    GD.blit(text, (size * 8 + 10, 0))
-    if action:
-        font = py.font.Font('freesansbold.ttf', 14)
-        text = font.render(f"{action[0]}{action[1][0] / 50}{action[1][1] / 50}", True, (0, 0, 0))
-        GD.blit(text, (size * 8 + 10, 50))
+                text = font.render(f"{action[2][2]}{action[0]} takes {action[2][0]}{action[2][1]}", True, (0, 0, 0))
+            self.moves.append(text)
+            if len(self.moves) > 20:
+                self.moves.pop(0)
+        for count, text in enumerate(self.moves):
+            x = 10 if count % 2 == 0 else 120
+            GD.blit(text, (size * 8 + x, 20 * int(count / 2) + 50))
+        return False
 
 
 # set up chess pieces
@@ -158,6 +175,8 @@ Wpawn1 = piece((size * 0, size * 6), ('W', 'p'), Wpawn_pic)
 p = [Bking, Bqueen, Bbishop1, Bknight1, Brook1, Bbishop2, Bknight2, Brook2, Bpawn1, Wking, Wqueen, Wbishop1, Wknight1,
      Wrook1, Wbishop2, Wknight2, Wrook2, Wpawn1]
 
+board = board()
+
 
 def main():
     global py, crashed, size, select, action, turn
@@ -176,14 +195,13 @@ def main():
                         found = True
                         break
                 if select != 0 and found == False and select.move_check(mx, my):  # check if possible pos
-                    if select.check_touching_color(mx, my):
-                        print(pieces_.type, "eat")
-                    direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
+                    eat = select.check_touching_color(mx, my, p)
                     select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
-                    print('moved', select.type, "to: ", direction, amount)
-                    action = select.type, select.pos
+                    # direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
+                    # print('moved', select.type, "to: ", direction, amount)
+                    action = select.type, select.pos, eat
                     turn = 'B' if turn == 'W' else 'W'
-                    print('turn:', turn)
+                    # print('turn:', turn)
                     select = 0
                     print('selected none')
                 elif found:
@@ -192,8 +210,8 @@ def main():
                     select = 0
                     print('selected none')
 
-        init_board()
-        UI(action)
+        board.draw()
+        action = board.UI(action)
 
         py.display.update()
         clock.tick(60)
