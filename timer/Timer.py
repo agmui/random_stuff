@@ -5,7 +5,7 @@ from datetime import datetime
 from tkinter import *
 import playsound
 import threading
-from timer import calculate_time
+import calculate_time
 
 hour, minute, ampm = "0", "0", 0
 width, hight = 300, 200
