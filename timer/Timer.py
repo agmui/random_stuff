@@ -3,12 +3,13 @@ import os
 import pygame
 from datetime import datetime
 from tkinter import *
-#import playsound
+# import playsound
 import threading
 from timer import calculate_time
+from PIL import Image, ImageTk
 
 hour, minute, ampm = "0", "0", 0
-width, hight = 300, 200
+width, hight = 600, 450  # tkinter window
 stop, kill, flip = False, False, False
 count, count2 = 10000, 100000
 sound1 = os.path.join("assets_and_sounds", "sempai.mp3")
@@ -85,7 +86,8 @@ def display():
 class window:
     def __init__(self):
         self.kill = False
-        self.img = PhotoImage(os.path.join("assets_and_sounds", "schedule.png"))
+        self.load = Image.open("assets_and_sounds/schedule.png")
+        self.img = ImageTk.PhotoImage(self.load)  # os.path.join("assets_and_sounds", "schedule.png"))
 
     def click(self, textentry_hour, textentry_minute):
         global hour, minute
@@ -119,28 +121,28 @@ class window:
         root.geometry(str(width) + "x" + str(hight))
 
     def labels(self):
-        Label(root, text="Input next class time: ", bg="gray", fg="white", font="none 20 bold").place(x=5, y=0)
+        Label(root, text="Input next class time: ", bg="gray", fg="white", font="none 26 bold").place(x=5, y=0)
         Label(root, text=":", bg="gray", fg="white", font="none 12 bold").place(x=100, y=47)
-        Label(root, image=self.img).place(x=180, y=150)
+        Label(root, image=self.img).place(x=20, y=170)
 
     def inputs(self):
         click = window()
         textentry_hour = Entry(root, width=5, bg="white")
         textentry_hour.place(x=60, y=50)
         textentry_minute = Entry(root, width=5, bg="white")
-        textentry_minute.place(x=118, y=50)
+        textentry_minute.place(x=120, y=50)
         ampm = IntVar()
         Radiobutton(root, activebackground="gray", activeforeground="white", text="AM", variable=ampm,
                     selectcolor="gray", value=1, command=lambda: click.button_Click(ampm.get()), bg="gray",
-                    fg="white", font="none 12 bold").place(x=200, y=50)
+                    fg="white", font="none 12 bold").place(x=280, y=40)
         Radiobutton(root, activebackground="gray", activeforeground="white", text="PM", variable=ampm,
                     selectcolor="gray", value=2, command=lambda: click.button_Click(ampm.get()), bg="gray",
-                    fg="white", font="none 12 bold").place(x=200, y=80)
-        Button(root, text="SUBMIT", width=6,
-               command=lambda: click.click(textentry_hour.get(), textentry_minute.get())).place(x=25, y=100)
+                    fg="white", font="none 12 bold").place(x=280, y=70)
+        Button(root, text="SUBMIT", width=7, height=2,
+               command=lambda: click.click(textentry_hour.get(), textentry_minute.get())).place(x=270, y=110)
         help = window()
-        Button(root, text="QUIT", width=6,
-               command=lambda: help.kill_()).place(x=240, y=170)
+        Button(root, text="QUIT", width=7, height=2, bg="#FF3232",
+               command=lambda: help.kill_()).place(x=25, y=110)
 
     def main(self):
         root.configure(bg="gray")
