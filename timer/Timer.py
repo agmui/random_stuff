@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-
+import os
 import pygame
-import time
-import sys
 from datetime import datetime
 from tkinter import *
 #import playsound
 import threading
-import calculate_time
-
+from timer import calculate_time
 
 hour, minute, ampm = "0", "0", 0
 width, hight = 300, 200
 stop, kill, flip = False, False, False
 count, count2 = 10000, 100000
+sound1 = os.path.join("assets_and_sounds", "sempai.mp3")
+sound2 = os.path.join("assets_and_sounds", "sempai_2.mp3")
+schedule = pygame.image.load(os.path.join("assets_and_sounds", "schedule.png"))
 
 
 def text(hour, minute, sec):
@@ -41,8 +41,10 @@ def timer(hour, minute, sec):
 
 
 def play_sound():
-    playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai.mp3", True)
-    playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai_2.mp3", True)
+    playsound.playsound(sound1, True)
+    playsound.playsound(sound2, True)
+    # playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai.mp3", True)
+    # playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai_2.mp3", True)
 
 
 def flash_screen(flip_):
@@ -83,6 +85,7 @@ def display():
 class window:
     def __init__(self):
         self.kill = False
+        self.img = PhotoImage(os.path.join("assets_and_sounds", "schedule.png"))
 
     def click(self, textentry_hour, textentry_minute):
         global hour, minute
@@ -118,12 +121,13 @@ class window:
     def labels(self):
         Label(root, text="Input next class time: ", bg="gray", fg="white", font="none 20 bold").place(x=5, y=0)
         Label(root, text=":", bg="gray", fg="white", font="none 12 bold").place(x=100, y=47)
+        Label(root, image=self.img).place(x=180, y=150)
 
     def inputs(self):
         click = window()
-        textentry_hour = Entry(root, width=5, bg="gray")
+        textentry_hour = Entry(root, width=5, bg="white")
         textentry_hour.place(x=60, y=50)
-        textentry_minute = Entry(root, width=5, bg="gray")
+        textentry_minute = Entry(root, width=5, bg="white")
         textentry_minute.place(x=118, y=50)
         ampm = IntVar()
         Radiobutton(root, activebackground="gray", activeforeground="white", text="AM", variable=ampm,
@@ -151,7 +155,7 @@ while True:
     root = Tk(className="Timer")
     run = window()
     run.main()
-    flip, stop = False, False
+    flip, stop, alarm = False, False, False
     if kill:
         kill = False
         break
@@ -159,7 +163,7 @@ while True:
     pygame.init()
     clock = pygame.time.Clock()  # FPS stuff
     crashed = False
-    GD = pygame.display.set_mode((2048, 1080))
+    GD = pygame.display.set_mode((2048, 1200))
     GD = pygame.display.set_mode((0, 0), pygame.RESIZABLE)
     pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1080))
 
@@ -169,9 +173,14 @@ while True:
                 crashed = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    alarm = False
+                    alarm = True
 
-        pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1080))
+        pygame.draw.rect(GD, (100, 100, 100), (0, 0, 2048, 1200))
+        GD.blit(pygame.transform.rotozoom(schedule, 0, 2),
+                (GD.get_width() - pygame.transform.rotozoom(schedule, 0, 2).get_width(), 0))
+
+        if quit_button(20, 20, 100, 50) or alarm:
+            break
 
         if stop:
             t1 = threading.Thread(target=play_sound)
@@ -185,12 +194,8 @@ while True:
 
         display()
 
-        if quit_button(20, 20, 100, 50):
-            break
-
         pygame.display.update()
         clock.tick(60)
-        time.sleep(0.1)
 
     pygame.quit()
 quit()
