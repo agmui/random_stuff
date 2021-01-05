@@ -5,7 +5,7 @@ import time
 import sys
 from datetime import datetime
 from tkinter import *
-import playsound
+#import playsound
 import threading
 import calculate_time
 
