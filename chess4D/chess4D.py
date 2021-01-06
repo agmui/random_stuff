@@ -1,6 +1,5 @@
 import os
 import pygame as py
-import time
 
 py.init()
 py.display.set_caption('chess')
@@ -26,7 +25,7 @@ Wrook_pic = py.image.load(os.path.join("assets", "Wrook.png"))
 Wpawn_pic = py.image.load(os.path.join("assets", "Wpawn.png"))
 
 
-class piece:
+class Piece:
     def __init__(self, pos, type, img):
         self.pos = pos
         self.color, self.type = type
@@ -103,13 +102,14 @@ class piece:
         for i in p:
             if i.pos == (int(mx / 50) * 50, int(my / 50) * 50):
                 i.pos = [-50, -50]
-                return i.color, i.type, self.color
+                return i
         return False
 
 
-class board:
+class Board:
     def __init__(self):
         self.moves = []
+        self.letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
 
     def draw(self):  # make board class?
         for i in range(8):
@@ -123,59 +123,70 @@ class board:
             pieces_.draw()
 
         font = py.font.Font('freesansbold.ttf', 10)
-        letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
         for i in range(9):
-            text = font.render(letters[i], True, (227, 187, 154) if i % 2 == 0 else (201, 123, 58))
+            text = font.render(self.letters[i], True, (227, 187, 154) if i % 2 == 0 else (201, 123, 58))
             GD.blit(text, (size * i + 40, size * 8 - 10))
             text = font.render(str(i), True, (201, 123, 58) if i % 2 == 0 else (227, 187, 154))
             GD.blit(text, (size - 45, size * (8 - i) + 5))
 
-    def UI(self, action):  # make scrolly thing to see past moves
+    def ui(self, action):  # make scrolly thing to see past moves
+        global obj
         py.draw.rect(GD, (255, 255, 255), (size * 8, 0, 220, size * 8))
         font = py.font.Font('freesansbold.ttf', 32)
-        text = font.render('Moves:', True, (0, 0, 0))
-        GD.blit(text, (size * 8 + 10, 0))
+        text = [0, 0, 0]
+        GD.blit(font.render('Moves:', True, (0, 0, 0)), (size * 8 + 10, 0))
         py.draw.line(GD, (0, 0, 0), (size * 8 + 115, 40), (size * 8 + 115, size * 8))
         if action:
+            obj, eat = action
             font = py.font.Font('freesansbold.ttf', 14)
-            if not action[2]:
-                text = font.render(f"{action[0]} to {action[1][0] / 50},{action[1][1] / 50}", True, (0, 0, 0))
+            text[0] = obj.img
+            if not eat:
+                text[1] = font.render(f"to {self.letters[int(obj.pos[0] / 50)]}{int(obj.pos[1] / 50)}", True, (0, 0, 0))
             else:
-                text = font.render(f"{action[2][2]}{action[0]} takes {action[2][0]}{action[2][1]}", True, (0, 0, 0))
+                text[2] = eat.img
+                text[1] = font.render(f"takes", True, (0, 0, 0))
+                print(eat.color)
+
             self.moves.append(text)
-            if len(self.moves) > 20:
+            if len(self.moves) > 25:
                 self.moves.pop(0)
+                self.moves.pop(1)
         for count, text in enumerate(self.moves):
             x = 10 if count % 2 == 0 else 120
-            GD.blit(text, (size * 8 + x, 20 * int(count / 2) + 50))
+            GD.blit(py.transform.scale(text[0], (int((size - 17) / 1.5), int((size - 17) / 1.5))),
+                    (size * 8 + x, 25 * int(count / 2) + 45))
+            GD.blit(text[1], (size * 8 + x + 25, 25 * int(count / 2) + 50))
+            if text[2] != 0:
+                GD.blit(py.transform.scale(text[2], (int((size - 17) / 1.5), int((size - 17) / 1.5))),
+                        (size * 8 + x + 65, 25 * int(count / 2) + 45))
         return False
 
 
 # set up chess pieces
-Bking = piece((size * 4, 0), ('B', 'King'), Bking_pic)
-Bqueen = piece((size * 3, 0), ('B', 'q'), Bqueen_pic)
-Bbishop1 = piece((size * 2, 0), ('B', 'b'), Bbishop_pic)
-Bknight1 = piece((size * 1, 0), ('B', 'k'), Bknight_pic)
-Brook1 = piece((size * 0, 0), ('B', 'r'), Brook_pic)
-Bbishop2 = piece((size * 5, 0), ('B', 'b'), Bbishop_pic)
-Bknight2 = piece((size * 6, 0), ('B', 'k'), Bknight_pic)
-Brook2 = piece((size * 7, 0), ('B', 'r'), Brook_pic)
-Bpawn1 = piece((size * 0, size * 1), ('B', 'p'), Bpawn_pic)
-Wking = piece((size * 4, size * 7), ('W', 'King'), Wking_pic)
-Wqueen = piece((size * 3, size * 7), ('W', 'q'), Wqueen_pic)
-Wbishop1 = piece((size * 2, size * 7), ('W', 'b'), Wbishop_pic)
-Wknight1 = piece((size * 1, size * 7), ('W', 'k'), Wknight_pic)
-Wrook1 = piece((size * 0, size * 7), ('W', 'r'), Wrook_pic)
-Wbishop2 = piece((size * 5, size * 7), ('W', 'b'), Wbishop_pic)
-Wknight2 = piece((size * 6, size * 7), ('W', 'k'), Wknight_pic)
-Wrook2 = piece((size * 7, size * 7), ('W', 'r'), Wrook_pic)
-Wpawn1 = piece((size * 0, size * 6), ('W', 'p'), Wpawn_pic)
+Bking = Piece((size * 4, 0), ('B', 'King'), Bking_pic)
+Bqueen = Piece((size * 3, 0), ('B', 'q'), Bqueen_pic)
+Bbishop1 = Piece((size * 2, 0), ('B', 'b'), Bbishop_pic)
+Bknight1 = Piece((size * 1, 0), ('B', 'k'), Bknight_pic)
+Brook1 = Piece((size * 0, 0), ('B', 'r'), Brook_pic)
+Bbishop2 = Piece((size * 5, 0), ('B', 'b'), Bbishop_pic)
+Bknight2 = Piece((size * 6, 0), ('B', 'k'), Bknight_pic)
+Brook2 = Piece((size * 7, 0), ('B', 'r'), Brook_pic)
+Bpawn1 = Piece((size * 0, size * 1), ('B', 'p'), Bpawn_pic)
+Wking = Piece((size * 4, size * 7), ('W', 'King'), Wking_pic)
+Wqueen = Piece((size * 3, size * 7), ('W', 'q'), Wqueen_pic)
+Wbishop1 = Piece((size * 2, size * 7), ('W', 'b'), Wbishop_pic)
+Wknight1 = Piece((size * 1, size * 7), ('W', 'k'), Wknight_pic)
+Wrook1 = Piece((size * 0, size * 7), ('W', 'r'), Wrook_pic)
+Wbishop2 = Piece((size * 5, size * 7), ('W', 'b'), Wbishop_pic)
+Wknight2 = Piece((size * 6, size * 7), ('W', 'k'), Wknight_pic)
+Wrook2 = Piece((size * 7, size * 7), ('W', 'r'), Wrook_pic)
+Wpawn1 = Piece((size * 0, size * 6), ('W', 'p'), Wpawn_pic)
 
 # list of all pieces
 p = [Bking, Bqueen, Bbishop1, Bknight1, Brook1, Bbishop2, Bknight2, Brook2, Bpawn1, Wking, Wqueen, Wbishop1, Wknight1,
      Wrook1, Wbishop2, Wknight2, Wrook2, Wpawn1]
 
-board = board()
+board = Board()
 
 
 def main():
@@ -199,7 +210,7 @@ def main():
                     select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
                     # direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
                     # print('moved', select.type, "to: ", direction, amount)
-                    action = select.type, select.pos, eat
+                    action = select, eat
                     turn = 'B' if turn == 'W' else 'W'
                     # print('turn:', turn)
                     select = 0
@@ -211,7 +222,7 @@ def main():
                     print('selected none')
 
         board.draw()
-        action = board.UI(action)
+        action = board.ui(action)
 
         py.display.update()
         clock.tick(60)
