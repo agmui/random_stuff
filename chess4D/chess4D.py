@@ -35,7 +35,8 @@ class Piece:
     def draw(self):
         GD.blit(py.transform.scale(self.img, (size - 17, size - 17)), (self.pos[0] + 8, self.pos[1] + 8))
 
-    def move(self, direction, amount):
+    def move(self, direction_amount):
+        direction, amount = direction_amount
         self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1] + size * amount * direction[0])
 
     def move_check(self, mx, my):
@@ -43,11 +44,14 @@ class Piece:
         if self.type == 'p':
             direction = abs(int(my / size) - int(self.pos[1] / size)), abs(int(mx / size) - int(self.pos[0] / size))
             if direction[0] == 1 and direction[1] == 0:
-                pass
-            elif self.type == 'B' and self.pos[1] == 1 and direction[0] == 2 and direction[1] == 0:
-                pass
-            elif self.type == 'W' and self.pos[1] == 6 and direction[0] == 2 and direction[1] == 0:
-                pass
+                direction = (-1 if self.color == 'W' else 1), 0
+                amount = 1
+            elif self.color == 'B' and self.pos[1]/50 == 1 and direction[0] == 2 and direction[1] == 0:
+                direction = 1, 0
+                amount = 2
+            elif self.color == 'W' and self.pos[1]/50 == 6 and direction[0] == 2 and direction[1] == 0:
+                direction = -1, 0
+                amount = 2
             else:
                 return False
             return direction, amount
@@ -111,7 +115,7 @@ class Board:
         self.moves = []
         self.letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
 
-    def draw(self):  # make board class?
+    def draw(self):
         for i in range(8):
             for j in range(8):
                 if (i + j) % 2 == 0:
@@ -207,7 +211,7 @@ def main():
                         break
                 if select != 0 and found == False and select.move_check(mx, my):  # check if possible pos
                     eat = select.check_touching_color(mx, my, p)
-                    select.move(select.move_check(mx, my)[0], select.move_check(mx, my)[1])
+                    select.move(select.move_check(mx, my))
                     # direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
                     # print('moved', select.type, "to: ", direction, amount)
                     action = select, eat
