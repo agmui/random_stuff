@@ -3,7 +3,7 @@ import os
 import pygame
 from datetime import datetime
 from tkinter import *
-# import playsound
+import playsound
 import threading
 from timer import calculate_time
 from PIL import Image, ImageTk
@@ -103,7 +103,7 @@ class window:
             minute = "0"
 
         if ampm == 0:
-            Label(root, text="Input AM or PM", bg="gray", fg="white", font="none 12 bold").place(x=160, y=30)
+            Label(root, text="Input AM or PM", bg="gray", fg="white", font="none 12 bold").place(x=150, y=50)
         else:
             root.destroy()
 
@@ -158,6 +158,7 @@ while True:
     run = window()
     run.main()
     flip, stop, alarm = False, False, False
+    stop = True  # ts
     if kill:
         kill = False
         break
@@ -181,6 +182,7 @@ while True:
         GD.blit(pygame.transform.rotozoom(schedule, 0, 2),
                 (GD.get_width() - pygame.transform.rotozoom(schedule, 0, 2).get_width(), 0))
 
+        quit_button(20, 20, 100, 50)
         if quit_button(20, 20, 100, 50) or alarm:
             break
 
@@ -189,8 +191,10 @@ while True:
 
             count += 1
             if count >= 85:
-                t1.start()
+                #t1.start()
                 count = 0
+            #if t1.join():
+             #   print(1)
             flip = not flip
             flash_screen(flip)
 
