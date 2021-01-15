@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../MacProjects/.idea/MacProject.iml" filepath="$PROJECT_DIR$/../MacProjects/.idea/MacProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/random_stuff.iml" filepath="$PROJECT_DIR$/.idea/random_stuff.iml" />
     </modules>
   </component>

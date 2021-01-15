@@ -35,35 +35,35 @@ class Piece:
     def draw(self):
         GD.blit(py.transform.scale(self.img, (size - 17, size - 17)), (self.pos[0] + 8, self.pos[1] + 8))
 
-    def move(self, direction_amount):
-        direction, amount = direction_amount
+    def move(self, direction, amount):
+        # direction, amount = direction_amount
         self.pos = (self.pos[0] + size * amount * direction[1], self.pos[1] + size * amount * direction[0])
 
+
     def move_check(self, mx, my):
-        direction, amount = [0, 0], [0, 0]
+        direction  = [0, 0]
         if self.type == 'p':
             direction = abs(int(my / size) - int(self.pos[1] / size)), abs(int(mx / size) - int(self.pos[0] / size))
             if direction[0] == 1 and direction[1] == 0:
                 direction = (-1 if self.color == 'W' else 1), 0
                 amount = 1
-            elif self.color == 'B' and self.pos[1]/50 == 1 and direction[0] == 2 and direction[1] == 0:
+            elif self.color == 'B' and self.pos[1] / 50 == 1 and direction[0] == 2 and direction[1] == 0:
                 direction = 1, 0
                 amount = 2
-            elif self.color == 'W' and self.pos[1]/50 == 6 and direction[0] == 2 and direction[1] == 0:
+            elif self.color == 'W' and self.pos[1] / 50 == 6 and direction[0] == 2 and direction[1] == 0:
                 direction = -1, 0
                 amount = 2
             else:
                 return False
-            return direction, amount
         elif self.type == 'k':
             try:
                 if abs(int(my / size) - int(self.pos[1] / size)) / abs(
                         int(mx / size) - int(self.pos[0] / size)) == 2 or abs(
                     int(my / size) - int(self.pos[1] / size)) / abs(int(mx / size) - int(self.pos[0] / size)) == 1 / 2:
                     direction = int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)
+                    amount = 1
                 else:
                     return False
-                return direction, 1
             except:
                 return False
         elif self.type == 'b':
@@ -72,7 +72,6 @@ class Piece:
                 amount = abs(int(my / size) - int(self.pos[1] / size))
             else:
                 return False
-            return direction, amount
         elif self.type == 'r':
             if self.pos[0] <= mx <= self.pos[0] + size:
                 direction = (1 if my >= self.pos[1] else -1), 0
@@ -82,7 +81,6 @@ class Piece:
                 amount = abs(int(mx / size) - int(self.pos[0] / size))
             else:
                 return False
-            return direction, amount
         elif self.type == 'q':
             if self.pos[0] <= mx <= self.pos[0] + size:  # rook like code
                 direction[0] = (1 if my >= self.pos[1] else -1)
@@ -96,13 +94,18 @@ class Piece:
                 amount = abs(int(my / size) - int(self.pos[1] / size))
             else:
                 return False
-            return direction, amount
         elif self.type == 'King':
             if abs(int(mx / size) - int(self.pos[0] / size)) <= 1 and abs(
                     int(my / size) - int(self.pos[1] / size)) <= 1:
-                return (int(my / size) - int(self.pos[1] / size), int(mx / size) - int(self.pos[0] / size)), 1
+                direction = (int(my / size) - int(self.pos[1] / size)), (int(mx / size) - int(self.pos[0] / size))
+                amount = 1
+            else:
+                return False
+        self.move(direction, amount)
+        return self.check_touching_color(mx, my)
 
-    def check_touching_color(self, mx, my, p):
+    def check_touching_color(self, mx, my):
+        print('sent to h')
         for i in p:
             if i.pos == (int(mx / 50) * 50, int(my / 50) * 50):
                 i.pos = [-50, -50]
@@ -113,7 +116,7 @@ class Piece:
 class Board:
     def __init__(self):
         self.moves = []
-        self.letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'uwu lol']
+        self.letters = ['uwu', 'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']
 
     def draw(self):
         for i in range(8):
@@ -134,7 +137,6 @@ class Board:
             GD.blit(text, (size - 45, size * (8 - i) + 5))
 
     def ui(self, action):  # make scrolly thing to see past moves
-        global obj
         py.draw.rect(GD, (255, 255, 255), (size * 8, 0, 220, size * 8))
         font = py.font.Font('freesansbold.ttf', 32)
         text = [0, 0, 0]
@@ -149,8 +151,6 @@ class Board:
             else:
                 text[2] = eat.img
                 text[1] = font.render(f"takes", True, (0, 0, 0))
-                print(eat.color)
-
             self.moves.append(text)
             if len(self.moves) > 25:
                 self.moves.pop(0)
@@ -209,15 +209,13 @@ def main():
                         select = pieces_
                         found = True
                         break
-                if select != 0 and found == False and select.move_check(mx, my):  # check if possible pos
-                    eat = select.check_touching_color(mx, my, p)
-                    select.move(select.move_check(mx, my))
+                if select != False and found is False and select.move_check(mx, my):  # check if possible pos
+                    eat = select.move_check(mx, my)
                     # direction, amount = select.move_check(mx, my)[0], select.move_check(mx, my)[1]
                     # print('moved', select.type, "to: ", direction, amount)
                     action = select, eat
                     turn = 'B' if turn == 'W' else 'W'
-                    # print('turn:', turn)
-                    select = 0
+                    select = False
                     print('selected none')
                 elif found:
                     pass
