@@ -12,6 +12,7 @@ sight_pic = pygame.image.load(r'/home/agmui/Desktop/pyImages/sight.png')
 birbs = birb_code.birbs
 pause = True
 
+
 while not crashed:
     pause = birb_code.events(pause)
     if not pause:
