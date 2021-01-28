@@ -5,11 +5,12 @@ from datetime import datetime
 from tkinter import *
 import playsound
 import threading
-from timer import calculate_time
+import calculate_time
 from PIL import Image, ImageTk
+import time
 
 hour, minute, ampm = "0", "0", 0
-width, hight = 600, 450  # tkinter window
+width, height = 600, 450  # tkinter window
 stop, kill, flip = False, False, False
 count, count2 = 10000, 100000
 sound1 = os.path.join("assets_and_sounds", "sempai.mp3")
@@ -44,8 +45,6 @@ def timer(hour, minute, sec):
 def play_sound():
     playsound.playsound(sound1, True)
     playsound.playsound(sound2, True)
-    # playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai.mp3", True)
-    # playsound.playsound(r"/home/desktop/Desktop/pyImages/sempai_2.mp3", True)
 
 
 def flash_screen(flip_):
@@ -77,8 +76,16 @@ def display():
     elif int(H) == 0:
         H = 12
 
-    h, m, s = calculate_time.calcutate(ampm, hour, minute)
 
+
+    h, m, s = calculate_time.calcutate(ampm, hour, minute)
+    #h, m, s = 0, 0, 0  # ts
+    if int(H) > 12 and int(M) > 5:
+        h = 12
+        m = 40
+    elif int(H) > 10 and int(M) > 20:
+        h = 10
+        m = 45
     timer(h, m, s)
     text(H, M, S)
 
@@ -118,7 +125,7 @@ class window:
         ampm = val
 
     def create_Window(self):
-        root.geometry(str(width) + "x" + str(hight))
+        root.geometry(str(width) + "x" + str(height))
 
     def labels(self):
         Label(root, text="Input next class time: ", bg="gray", fg="white", font="none 26 bold").place(x=5, y=0)
@@ -158,7 +165,6 @@ while True:
     run = window()
     run.main()
     flip, stop, alarm = False, False, False
-    stop = True  # ts
     if kill:
         kill = False
         break
@@ -182,27 +188,22 @@ while True:
         GD.blit(pygame.transform.rotozoom(schedule, 0, 2),
                 (GD.get_width() - pygame.transform.rotozoom(schedule, 0, 2).get_width(), 0))
 
-        quit_button(20, 20, 100, 50)
-        if quit_button(20, 20, 100, 50) or alarm:
-            break
-
         if stop:
-            t1 = threading.Thread(target=play_sound)
+            t1 = threading.Thread(target=play_sound, daemon=True)
 
             count += 1
             if count >= 85:
-                #t1.start()
+                t1.start()
                 count = 0
-            #if t1.join():
-             #   print(1)
             flip = not flip
             flash_screen(flip)
 
         display()
 
+        if quit_button(20, 20, 100, 50) or alarm:
+            break
+
         pygame.display.update()
         clock.tick(60)
 
     pygame.quit()
-
-quit()
