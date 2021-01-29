@@ -13,12 +13,12 @@ birb_pic = os.path.join("assets", "birb.png")
 birb_touch = os.path.join("assets", "birb_touch.png")
 sight = os.path.join("assets", "sight.png")
 
-# pygame.transform.rotozoom(self.image, self.angle, 1)
 
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pic, index):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(pic).convert_alpha()
+        self.ogImg = pygame.image.load(pic).convert_alpha()
+        self.image = self.ogImg
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=(0, 0))
         self.index = index
@@ -32,13 +32,13 @@ class Sprite(pygame.sprite.Sprite):
 
     def rotate(self, birbList):
         deg = birbList[self.index].getAngle()
-        self.image = pygame.transform.rotate(self.image, deg) # helpp ------------------------------------
+        self.image = pygame.transform.rotate(self.image, deg)
 
     def getPos(self):
         return self.rect.center
 
     def draw(self):
-        window.blit(self.image, self.getPos())
+        window.blit(self.image, self.getPos())#(self.getPos()[0]-int(self.image.get_width()/2),self.getPos()[1]- int(self.image.get_height()/2)))
 
 
 def moveAllBirbs(changeInPos):
@@ -84,14 +84,16 @@ while not done:
     if viswals:
         sight_group.update()
     window.fill((100, 100, 100))
-    # sprite_group.draw(window)  # draw the game sprites
-    for i in sprite_group:
-        i.draw()
+
+    sprite_group.draw(window)  # draw the game sprites
+    #for i in sprite_group:
+    #    i.draw()
+
     if viswals:# somehow order sight to back--------------------------------------------
         sight_group.draw(window)
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
-    time.sleep(0.1)
+    #time.sleep(0.1)
 
 pygame.quit()
