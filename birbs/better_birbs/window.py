@@ -1,3 +1,4 @@
+import math
 import os
 import time
 
@@ -31,14 +32,13 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.move_ip(distance)
 
     def rotate(self, birbList):
-        deg = birbList[self.index].getAngle()
-        self.image = pygame.transform.rotate(self.image, deg)
+        deg = -math.degrees(birbList[self.index].getAngle())
+        self.image = pygame.transform.rotate(self.ogImg, deg)
+        self.rect = self.image.get_rect(center=self.rect.center)
+
 
     def getPos(self):
         return self.rect.center
-
-    def draw(self):
-        window.blit(self.image, self.getPos())#(self.getPos()[0]-int(self.image.get_width()/2),self.getPos()[1]- int(self.image.get_height()/2)))
 
 
 def moveAllBirbs(changeInPos):
@@ -67,17 +67,23 @@ for i in range(num_of_birbs):
 
 clock = pygame.time.Clock()
 done = False
+temp = 0
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                temp = -1
+            elif event.key == pygame.K_RIGHT:
+                temp = 1
 
-    Mouse_x, Mouse_y = pygame.mouse.get_pos()
+    Mouse_x, Mouse_y = -1,-1#pygame.mouse.get_pos()
 
-    birb.main(Mouse_x, Mouse_y)
+    birb.main(Mouse_x, Mouse_y, temp)
+    temp = 0
     changeInPos = birb.poslist
     moveAllBirbs(changeInPos)
-
 
     # Repaint the screen
     sprite_group.update()  # re-position the game sprites
@@ -86,14 +92,12 @@ while not done:
     window.fill((100, 100, 100))
 
     sprite_group.draw(window)  # draw the game sprites
-    #for i in sprite_group:
-    #    i.draw()
 
-    if viswals:# somehow order sight to back--------------------------------------------
+    if viswals:  # somehow order sight to back--------------------------------------------
         sight_group.draw(window)
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
-    #time.sleep(0.1)
+    # time.sleep(0.1)
 
 pygame.quit()

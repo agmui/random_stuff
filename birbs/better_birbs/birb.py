@@ -8,7 +8,7 @@ poslist = []
 class birb:
     def __init__(self, pos, angle):
         self.pos = pos
-        self.angle = angle
+        self.angle = math.radians(angle)
         self.speed = 10
         self.nearByBirbsList = []
 
@@ -17,7 +17,7 @@ class birb:
         self.avoid_filter()
         self.same_direction_filter()
         self.center_dive()
-        #self.move()
+        self.move()
 
     def sight(self):
         for i in poslist:
@@ -26,14 +26,14 @@ class birb:
             angle = math.degrees(math.atan2(dy, dx))*-1
             if 0 != distance <= 100 and not (-90 + 10 >= angle >= -90 - 10):
                 self.nearByBirbsList.append([distance, angle])
-                #if self.pos == [150, 100]:
-                #    print(angle)
+                if self.pos == [150, 100]:
+                    print(angle)
 
     def avoid_filter(self):
         total = 0
         for i in self.nearByBirbsList:
             distance, angle = i[0], i[1]
-            total -= math.exp(0.1*distance-1) * angle
+            total -= math.exp(0.0001*distance-1) * angle*0.1
         self.angle += total
 
     def same_direction_filter(self):
@@ -65,12 +65,16 @@ def init():
     #    b = birb([0, 0], 0)
     #    birb_list.append(b)
     b1 = birb([100, 100], 0)
-    b2 = birb([150, 100], 0)
+    b2 = birb([500, 100], 180)
     birb_list.append(b1)
     birb_list.append(b2)
 
 
-def main(Mouse_x, Mouse_y):
+def main(Mouse_x, Mouse_y, temp):
+    if temp == 1:
+        birb_list[1].angle += math.radians(10)
+    if temp == -1:
+        birb_list[1].angle -= math.radians(10)
     if Mouse_x != -1:
         birb_list[0].pos = (Mouse_x, Mouse_y)
     getAllBirbPos()
