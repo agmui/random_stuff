@@ -78,7 +78,7 @@ while not done:
             elif event.key == pygame.K_RIGHT:
                 temp = 1
 
-    Mouse_x, Mouse_y = -1,-1#pygame.mouse.get_pos()
+    Mouse_x, Mouse_y = pygame.mouse.get_pos()
 
     birb.main(Mouse_x, Mouse_y, temp)
     temp = 0
