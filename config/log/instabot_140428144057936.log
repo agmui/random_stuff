@@ -1,0 +1,17 @@
+2020-11-19 01:23:14,759 - instabot version: 0.117.0 (bot) - INFO - Instabot version: 0.117.0 Started
+2020-11-19 01:23:14,759 - instabot version: 0.117.0 (bot) - DEBUG - Bot imported from /home/desktop/.local/lib/python3.8/site-packages/instabot/bot/bot.py
+2020-11-19 01:23:14,759 - instabot version: 0.117.0 (api_login) - DEBUG - Loading cookies
+2020-11-19 01:23:14,760 - instabot version: 0.117.0 (api_login) - DEBUG - Loading uuids
+2020-11-19 01:23:14,760 - instabot version: 0.117.0 (api_login) - INFO - Recovery from /home/desktop/Desktop/random_stuff/config/dip_billerly_uuid_and_cookie.json: COOKIE True - UUIDs True - TIMING, DEVICE and ...
+- user-agent=Instagram 117.0.0.28.123 Android (28/9.0; 420dpi; 1080x1920; OnePlus; ONEPLUS A3003; OnePlus3; qcom; en_US; 180322800)
+- phone_id=92483389-413f-4c78-ace0-c638d5c835c6
+- uuid=bfe741e7-0dbb-4feb-b687-b7302552f902
+- client_session_id=d4887b23-3a02-4ee4-be2f-a50e8e1f587e
+- device_id=android-483aa09804a4f498
+2020-11-19 01:23:14,760 - instabot version: 0.117.0 (api_login) - INFO - LOGIN FLOW! Just logged-in: False
+2020-11-19 01:23:15,250 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: feed/timeline/ returned response: <Response [200]>
+2020-11-19 01:23:15,551 - instabot version: 0.117.0 (api) - DEBUG - POST to endpoint: feed/reels_tray/ returned response: <Response [200]>
+2020-11-19 01:23:15,755 - instabot version: 0.117.0 (api) - INFO - Logged-in successfully as 'dip_billerly'!
+2020-11-19 01:23:15,756 - instabot version: 0.117.0 (bot_checkpoint) - DEBUG - Loading Checkpoint file from: /home/desktop/Desktop/random_stuff/config/dip_billerly.checkpoint
+2020-11-19 01:23:16,581 - instabot version: 0.117.0 (bot_checkpoint) - DEBUG - Saving Checkpoint file to: /home/desktop/Desktop/random_stuff/config/dip_billerly.checkpoint
+2020-11-19 01:23:17,018 - instabot version: 0.117.0 (bot) - INFO - Total requests: 31

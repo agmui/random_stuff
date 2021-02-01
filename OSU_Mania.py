@@ -71,7 +71,7 @@ import serial
 from pynput.keyboard import Key, Controller
 import time
 
-ser = serial.Serial('COM3', 115200)
+ser = serial.Serial('/dev/ttyACM0', 9600)
 keyboard = Controller()
 
 print(ser.name)

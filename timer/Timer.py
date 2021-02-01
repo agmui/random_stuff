@@ -134,9 +134,9 @@ class window:
 
     def inputs(self):
         click = window()
-        textentry_hour = Entry(root, width=5, bg="white")
+        textentry_hour = Entry(root, width=5, bg="gray")
         textentry_hour.place(x=60, y=50)
-        textentry_minute = Entry(root, width=5, bg="white")
+        textentry_minute = Entry(root, width=5, bg="gray")
         textentry_minute.place(x=120, y=50)
         ampm = IntVar()
         Radiobutton(root, activebackground="gray", activeforeground="white", text="AM", variable=ampm,
