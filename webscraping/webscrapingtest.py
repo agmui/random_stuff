@@ -42,13 +42,13 @@ def main():
     session.post(URL, payload)
     session = session.get("https://ahs-fusd-ca.schoolloop.com/portal/student_home")
 
-    #sys.stdout = open('output.html', 'wt')
-    #print(session.text)
+    sys.stdout = open('output.html', 'wt')
+    print(session.text.encode('UTF-8'))
 
     soup = BeautifulSoup(session.content, 'html.parser')
     output = findTag(soup, 'div', 'class', 'ajax_accordion_row')
     soup = BeautifulSoup(str(output), 'html.parser')
-    print(output)
+    # print(output)
     #print(findTag(soup, 'td', 'class', 'column padding_5'))
 
 def findTag(soup, tag, type, name):
