@@ -3,22 +3,9 @@ import requests
 import sys
 from lxml import html
 
-"""sys.stdout = open('output.html', 'wt')
-res = requests.get('https://ahs-fusd-ca.schoolloop.com/portal/login')
 
-print(str(res.text))
-
-soup = BeautifulSoup(res.content, 'html.parser')
-
-# Extract title of page
-page_title = soup.title.text
-
-# print the result
-#print(page_title)
-"""
-
-USERNAME = "amui",  # "Morshu",
-PASSWORD = "momand123"  # "kumar4567"
+USERNAME = "Morshu",
+PASSWORD = "kumar4567"
 
 URL = "https://ahs-fusd-ca.schoolloop.com/portal/login?etarget=login_form"
 
