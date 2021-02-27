@@ -32,10 +32,9 @@ class Sprite(pygame.sprite.Sprite):
         self.rect.move_ip(distance)
 
     def rotate(self, birbList):
-        deg = -math.degrees(birbList[self.index].getAngle())
+        deg = math.degrees(birbList[self.index].getAngle())
         self.image = pygame.transform.rotate(self.ogImg, deg)
         self.rect = self.image.get_rect(center=self.rect.center)
-
 
     def getPos(self):
         return self.rect.center
@@ -80,8 +79,7 @@ while not done:
 
     Mouse_x, Mouse_y = pygame.mouse.get_pos()
 
-    birb.main(Mouse_x, Mouse_y, temp)
-    temp = 0
+    birb.main(Mouse_x, Mouse_y)
     changeInPos = birb.poslist
     moveAllBirbs(changeInPos)
 
@@ -98,6 +96,6 @@ while not done:
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
-    # time.sleep(0.1)
+    time.sleep(0.1)
 
 pygame.quit()
