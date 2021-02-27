@@ -6,7 +6,7 @@ import pygame
 from birbs.better_birbs import birb
 
 WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 690
+WINDOW_HEIGHT = 690  # has decencies in birb class
 num_of_birbs = birb.num_of_birbs
 viswals = False
 
@@ -96,6 +96,6 @@ while not done:
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
-    time.sleep(0.1)
+    # time.sleep(0.1)
 
 pygame.quit()
