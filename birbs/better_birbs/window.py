@@ -27,7 +27,7 @@ class Sprite(pygame.sprite.Sprite):
         self.image = pygame.image.load(birb_touch).convert_alpha()
 
     def moveBy(self, changeInPos):
-        distance = changeInPos[self.index][0] - self.getPos()[0], changeInPos[self.index][1] - self.getPos()[1]
+        distance = changeInPos[self.index].getPos()[0] - self.getPos()[0], changeInPos[self.index].getPos()[1] - self.getPos()[1]
         self.rect.move_ip(distance)
 
     def rotate(self, birbList):
@@ -39,12 +39,12 @@ class Sprite(pygame.sprite.Sprite):
         return self.rect.center
 
 
-def moveAllBirbs(changeInPos):
+def moveAllBirbs():
     for i in sprite_group:
-        i.moveBy(changeInPos)
+        i.moveBy(birb.birb_list)
         if viswals:
             for j in sight_group:
-                j.moveBy(changeInPos)
+                j.moveBy(birb.birb_list)
         i.rotate(birb.birb_list)
 
 
@@ -88,8 +88,8 @@ while not done:
         Mouse_x, Mouse_y = pygame.mouse.get_pos()
 
         birb.main(Mouse_x, Mouse_y)
-        changeInPos = birb.poslist
-        moveAllBirbs(changeInPos)
+        changeInPos = birb.birb_list
+        moveAllBirbs()
 
         # Repaint the screen
         sprite_group.update()  # re-position the game sprites

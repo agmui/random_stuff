@@ -2,7 +2,6 @@ import math
 import random
 
 birb_list = []
-poslist = []
 """
      90 
 +-180 >  0
@@ -20,7 +19,7 @@ class birb:
 
     def path_finding(self):
         self.sight()
-        #self.avoid_filter()
+        self.avoid_filter()
         self.same_direction_filter()
         self.center_dive()
         self.move()
@@ -38,12 +37,11 @@ class birb:
 
     def sight(self):  # bro fix your rads situation
         self.nearByBirbsList.clear()
-        for i in poslist:
-            dx, dy = i[0] - self.pos[0], self.pos[1] - i[1]
+        for i in birb_list:
+            dx, dy = i.getPos()[0] - self.pos[0], self.pos[1] - i.getPos()[1]
             distance = math.hypot(dx, dy)
-            angle = math.atan2(dy, dx)
-            if 0 != distance <= 150 and not self.blind_spot(math.degrees(angle)):
-                self.nearByBirbsList.append([distance, angle])
+            if 0 != distance <= 150 and not self.blind_spot(math.degrees(angle := math.atan2(dy, dx))):
+                self.nearByBirbsList.append([distance, angle, i.getAngle()])
 
     # could check if self == angle and just have it go 50/50
     # make relitive angle a factor
@@ -57,7 +55,6 @@ class birb:
             angle += 360
         return -1 if angle >= 0 else 1
 
-
     def avoid_filter(self):
         total = 0
         for i in self.nearByBirbsList:
@@ -66,15 +63,15 @@ class birb:
         self.rotate(total)
 
     def same_direction_filter(self):
-        total = 0
         for i in self.nearByBirbsList:
-            angle = i[1]
-            total += self.L_or_R(angle)*-0.01
-        self.rotate(total)
-
+            angle = i[2]
+            self.rotate(math.radians(-self.L_or_R(angle)))
 
     def center_dive(self):
-        pass
+        for i in self.nearByBirbsList:
+            angle = i[1]
+            self.rotate(math.radians(-0.5*self.L_or_R(angle)))
+
 
     def move(self):
         r = 3
@@ -102,12 +99,6 @@ class birb:
 
     def getAngle(self):
         return self.angle
-
-
-def getAllBirbPos():  # maybe remove cuz u can just get pos list form birb_list
-    poslist.clear()
-    for i in birb_list:
-        poslist.append(i.getPos())
 
 
 def init():
@@ -162,7 +153,6 @@ def main(Mouse_x, Mouse_y):
     if mouse:
         if Mouse_x != -1:
             birb_list[0].pos = (Mouse_x, Mouse_y)
-    getAllBirbPos()
     for i in birb_list:
         i.path_finding()
 
@@ -170,5 +160,5 @@ def main(Mouse_x, Mouse_y):
 if __name__ == '__main__':
     ts()
     main(-1, 100)
-    #birb_list[0].angle = -1
+    # birb_list[0].angle = -1
     print(birb_list[0].L_or_R(math.radians(-10)))
