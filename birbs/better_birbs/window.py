@@ -48,8 +48,8 @@ def moveAllBirbs(changeInPos):
         i.rotate(birb.birb_list)
 
 
-#birb.init()
-birb.ts()
+birb.init()
+#birb.ts()
 #birb.test()
 num_of_birbs = birb.num_of_birbs
 pygame.init()
@@ -69,6 +69,8 @@ for i in range(num_of_birbs):
 clock = pygame.time.Clock()
 done = False
 temp = 0
+step = True
+play = not False
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -78,23 +80,28 @@ while not done:
                 temp = -1
             elif event.key == pygame.K_RIGHT:
                 temp = 1
+            elif event.key == pygame.K_SPACE:
+                step = True
+            elif event.key == pygame.K_p:
+                play = not play
+    if step or play:
+        Mouse_x, Mouse_y = pygame.mouse.get_pos()
 
-    Mouse_x, Mouse_y = pygame.mouse.get_pos()
+        birb.main(Mouse_x, Mouse_y)
+        changeInPos = birb.poslist
+        moveAllBirbs(changeInPos)
 
-    birb.main(Mouse_x, Mouse_y)
-    changeInPos = birb.poslist
-    moveAllBirbs(changeInPos)
+        # Repaint the screen
+        sprite_group.update()  # re-position the game sprites
+        if viswals:
+            sight_group.update()
+        window.fill((100, 100, 100))
 
-    # Repaint the screen
-    sprite_group.update()  # re-position the game sprites
-    if viswals:
-        sight_group.update()
-    window.fill((100, 100, 100))
+        sprite_group.draw(window)  # draw the game sprites
 
-    sprite_group.draw(window)  # draw the game sprites
-
-    if viswals:  # somehow order sight to back--------------------------------------------
-        sight_group.draw(window)
+        if viswals:  # somehow order sight to back--------------------------------------------
+            sight_group.draw(window)
+        step = False
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
