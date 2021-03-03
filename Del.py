@@ -4,7 +4,6 @@ def L_or_R(self, angle):
         angle -= 360
     elif angle < -180:
         angle += 360
-    print(self, angle, end = ' ')
     return -1 if angle >= 0 else 1
 
 #print(L_or_R(-176.44657665935395, 172.6680756538965), 1)
@@ -41,5 +40,3 @@ def test():
     print(L_or_R(180, -179), -1)
 
 #test()
-
-
