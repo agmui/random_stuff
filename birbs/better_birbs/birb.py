@@ -26,7 +26,7 @@ class birb:
         self.center_dive()
         self.move()
 
-    def sight(self):  # bro fix your rads situation
+    def sight(self):
         self.nearByBirbsList.clear()
         for i in birb_list:
             dx, dy = i.getPos()[0] - self.pos[0], self.pos[1] - i.getPos()[1]
@@ -75,7 +75,7 @@ class birb:
             self.rotate(0.5 * math.radians(self.L_or_R(angle)))
 
     def move(self):
-        self.pos[0] += speed * math.cos(self.angle)  # make sure it is in radians or something
+        self.pos[0] += speed * math.cos(self.angle)
         self.pos[1] -= speed * math.sin(self.angle)
         if self.getPos()[0] > 800:
             self.pos[0] = 0
@@ -125,13 +125,13 @@ def test():
     b2 = birb([100, 390], 0, 2)
     b3 = birb([300, 400], math.pi, 3)
     b4 = birb([600, 100], 0, 4)
-    b5 = birb([700, 200], math.pi/2, 5)
-    b6 = birb([600, 500], math.pi/2, 6)
+    b5 = birb([700, 200], math.pi / 2, 5)
+    b6 = birb([600, 500], math.pi / 2, 6)
     b7 = birb([700, 400], math.pi, 7)
-    b8 = birb([100, 500], -math.pi/2, 8)
-    b9 = birb([110, 650], math.pi/2, 9)
-    b10 = birb([310, 500], -math.pi/2, 10)
-    b11 = birb([300, 650], math.pi/2, 11)
+    b8 = birb([100, 500], -math.pi / 2, 8)
+    b9 = birb([110, 650], math.pi / 2, 9)
+    b10 = birb([310, 500], -math.pi / 2, 10)
+    b11 = birb([300, 650], math.pi / 2, 11)
     birb_list.append(b0)
     birb_list.append(b1)
     birb_list.append(b2)
