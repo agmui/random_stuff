@@ -69,6 +69,7 @@ class birb:
             angle = i[2]
             self.rotate(math.radians(self.L_or_R(angle)))
 
+    # should only dive for the closest birb
     def center_dive(self):
         for i in self.nearByBirbsList:
             angle = i[1]
