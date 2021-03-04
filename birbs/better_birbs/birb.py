@@ -2,8 +2,11 @@ import math
 import random
 
 birb_list = []
-speed = 3
-sight_radius = 200
+speed = 5.5
+sight_radius = 300
+WINDOW_WIDTH = 1500#800
+WINDOW_HEIGHT = 1050#690
+
 """
      90 
 +-180 >  0
@@ -12,6 +15,7 @@ sight_radius = 200
 
 
 class birb:
+    # add velocity
     def __init__(self, pos, angle, id):
         self.pos = pos
         self.angle = angle
@@ -21,9 +25,9 @@ class birb:
 
     def path_finding(self):
         self.sight()
-        self.avoid_filter()
-        self.same_direction_filter()
-        self.center_dive()
+        self.separation()
+        self.alignment()
+        self.cohesion()
         self.move()
 
     def sight(self):
@@ -35,10 +39,10 @@ class birb:
                 angle = math.atan2(dy, dx)
                 l = [self.angle + (8 * math.pi / 9), self.angle - (8 * math.pi / 9)]
                 for j in range(2):
-                    if l[j] > math.pi:  # 180:
-                        l[j] -= 2 * math.pi  # 360
-                    elif l[j] < -math.pi:  # -180:
-                        l[j] += 2 * math.pi  # 360
+                    if l[j] > math.pi:
+                        l[j] -= 2 * math.pi
+                    elif l[j] < -math.pi:
+                        l[j] += 2 * math.pi
                 if math.pi / 18 >= self.angle >= -math.pi / 18:
                     test = (l[1] >= angle or angle >= l[0])
                 else:
@@ -46,46 +50,43 @@ class birb:
                 if not test:
                     self.nearByBirbsList.append([distance, angle, i.getAngle()])
 
-    # could check if self == angle and just have it go 50/50
     def L_or_R(self, angle):  # determans if the angle is to the left or right of birb and returns which side it on
         angle = angle - self.angle
         if angle > math.pi:
             angle -= 2 * math.pi
         elif angle < -math.pi:
             angle += 2 * math.pi
-        return 1 if angle >= 0 else -1
+        return 1 if angle > 0 else (-1 if angle < 0 else random.choice([1, -1]))
 
     # remove the rotate funciton to just change angle, then rotate at the very end
     # make relative angle a factor
-    def avoid_filter(self):
+    def separation(self):
         total = 0
         for i in self.nearByBirbsList:
             distance, angle = i[0], i[1]
             total += 0.055 * math.exp(-0.005 * distance) * -self.L_or_R(angle)
         self.rotate(total)
 
-    def same_direction_filter(self):
+    def alignment(self):
         for i in self.nearByBirbsList:
             angle = i[2]
             self.rotate(math.radians(self.L_or_R(angle)))
 
-    # should only dive for the closest birb
-    def center_dive(self):
+    def cohesion(self):
         for i in self.nearByBirbsList:
-            angle = i[1]
-            self.rotate(0.5 * math.radians(self.L_or_R(angle)))
+            self.rotate(0.2 * math.radians(self.L_or_R(i[1])))
 
     def move(self):
         self.pos[0] += speed * math.cos(self.angle)
         self.pos[1] -= speed * math.sin(self.angle)
-        if self.getPos()[0] > 800:
+        if self.getPos()[0] > WINDOW_WIDTH:
             self.pos[0] = 0
         elif self.getPos()[0] < 0:
-            self.pos[0] = 800
-        if self.getPos()[1] > 690:
+            self.pos[0] = WINDOW_WIDTH
+        if self.getPos()[1] > WINDOW_HEIGHT:
             self.pos[1] = 0
         elif self.getPos()[1] < 0:
-            self.pos[1] = 690
+            self.pos[1] = WINDOW_HEIGHT
 
     def rotate(self, deg):
         if deg + self.angle > math.pi:
@@ -106,7 +107,7 @@ def init():
     global num_of_birbs
     num_of_birbs = 60
     for i in range(num_of_birbs):
-        birb_list.append(birb([random.randint(0, 800), random.randint(0, 690)], random.randint(-180, 180), 1))
+        birb_list.append(birb([random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT)], random.randint(-180, 180), 1))
 
 
 def ts():

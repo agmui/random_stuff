@@ -5,8 +5,8 @@ import time
 import pygame
 from birbs.better_birbs import birb
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 690  # has decencies in birb class
+WINDOW_WIDTH = birb.WINDOW_WIDTH
+WINDOW_HEIGHT = birb.WINDOW_HEIGHT
 viswals = False
 
 birb_pic = os.path.join("assets", "birb.png")
