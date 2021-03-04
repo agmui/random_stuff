@@ -4,8 +4,9 @@ import random
 birb_list = []
 speed = 5.5
 sight_radius = 300
-WINDOW_WIDTH = 1500#800
-WINDOW_HEIGHT = 1050#690
+WINDOW_WIDTH = 1500  # 800
+WINDOW_HEIGHT = 1050  # 690
+circlePos = 0, 0
 
 """
      90 
@@ -16,6 +17,7 @@ WINDOW_HEIGHT = 1050#690
 
 class birb:
     # add velocity
+    # change birb pic to have center in right place
     def __init__(self, pos, angle, id):
         self.pos = pos
         self.angle = angle
@@ -25,10 +27,12 @@ class birb:
 
     def path_finding(self):
         self.sight()
-        self.separation()
-        self.alignment()
-        self.cohesion()
-        self.move()
+        if len(self.nearByBirbsList) != 0:
+            # self.separation()
+            # self.alignment()
+            self.cohesion()
+        # self.avoid_Walls()
+        # self.move()
 
     def sight(self):
         self.nearByBirbsList.clear()
@@ -48,7 +52,7 @@ class birb:
                 else:
                     test = (l[1] >= angle >= l[0])
                 if not test:
-                    self.nearByBirbsList.append([distance, angle, i.getAngle()])
+                    self.nearByBirbsList.append([distance, angle, i.getAngle(), i.getPos()])
 
     def L_or_R(self, angle):  # determans if the angle is to the left or right of birb and returns which side it on
         angle = angle - self.angle
@@ -73,8 +77,18 @@ class birb:
             self.rotate(math.radians(self.L_or_R(angle)))
 
     def cohesion(self):
-        for i in self.nearByBirbsList:
-            self.rotate(0.2 * math.radians(self.L_or_R(i[1])))
+        global circlePos
+        x = sum(i[0] for i in (i[3] for i in self.nearByBirbsList)) / len(self.nearByBirbsList)
+        y = sum(i[1] for i in (i[3] for i in self.nearByBirbsList)) / len(self.nearByBirbsList)
+        if self.id == 0:
+            print(x, y)
+            circlePos = x, y
+
+    def avoid_Walls(self):
+        if self.getPos()[0] > WINDOW_WIDTH - 20:
+            distance = 1 / (WINDOW_WIDTH - self.getPos()[0])
+            total = 0.055 * math.exp(-0.005 * distance) * self.angle
+            self.rotate(total)
 
     def move(self):
         self.pos[0] += speed * math.cos(self.angle)
@@ -107,21 +121,23 @@ def init():
     global num_of_birbs
     num_of_birbs = 60
     for i in range(num_of_birbs):
-        birb_list.append(birb([random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT)], random.randint(-180, 180), 1))
+        birb_list.append(
+            birb([random.randint(0, WINDOW_WIDTH), random.randint(0, WINDOW_HEIGHT)], random.randint(-180, 180), 1))
 
 
 def ts():
     global num_of_birbs
-    num_of_birbs = 2
-    b1 = birb([100, 390], 0, 0)
-    b2 = birb([351, 400], math.radians(-180), 1)
+    b1 = birb([150, 400], 0, 0)
+    b2 = birb([250, 400], 0, 1)
+    b3 = birb([200, 460], math.radians(0), 2)
     birb_list.append(b1)
     birb_list.append(b2)
+    birb_list.append(b3)
+    num_of_birbs = len(birb_list)
 
 
 def test():
     global num_of_birbs
-    num_of_birbs = 12
     b0 = birb([100, 110], 0, 0)
     b1 = birb([300, 100], math.pi, 1)
     b2 = birb([100, 390], 0, 2)
@@ -146,6 +162,7 @@ def test():
     birb_list.append(b9)
     birb_list.append(b10)
     birb_list.append(b11)
+    num_of_birbs = len(birb_list)
 
 
 mouse = False

@@ -12,10 +12,11 @@ viswals = False
 birb_pic = os.path.join("assets", "birb.png")
 birb_touch = os.path.join("assets", "birb_touch.png")
 sight = os.path.join("assets", "sight.png")
+circle = os.path.join("assets", "circle.png")
 
 
 class Sprite(pygame.sprite.Sprite):
-    def __init__(self, pic, index):
+    def __init__(self, pic, index=0):
         pygame.sprite.Sprite.__init__(self)
         self.ogImg = pygame.image.load(pic).convert_alpha()
         self.image = self.ogImg
@@ -27,7 +28,8 @@ class Sprite(pygame.sprite.Sprite):
         self.image = pygame.image.load(birb_touch).convert_alpha()
 
     def moveBy(self, changeInPos):
-        distance = changeInPos[self.index].getPos()[0] - self.getPos()[0], changeInPos[self.index].getPos()[1] - self.getPos()[1]
+        distance = changeInPos[self.index].getPos()[0] - self.getPos()[0], changeInPos[self.index].getPos()[1] - \
+                   self.getPos()[1]
         self.rect.move_ip(distance)
 
     def rotate(self, birbList):
@@ -46,11 +48,12 @@ def moveAllBirbs():
             for j in sight_group:
                 j.moveBy(birb.birb_list)
         i.rotate(birb.birb_list)
+    circle.rect.center = birb.circlePos  # ts------------
 
 
-birb.init()
-#birb.ts()
-#birb.test()
+# birb.init()
+birb.ts()
+# birb.test()
 num_of_birbs = birb.num_of_birbs
 pygame.init()
 pygame.font.init()
@@ -65,6 +68,11 @@ for i in range(num_of_birbs):
     if viswals:
         s = Sprite(sight, i)
         sight_group.add(s)
+# -------
+circle = Sprite(circle)
+sprite_group.add(circle)
+circle.ogImg = pygame.transform.scale(circle.ogImg, (14, 14))
+# -------
 
 clock = pygame.time.Clock()
 done = False
@@ -88,7 +96,6 @@ while not done:
         Mouse_x, Mouse_y = pygame.mouse.get_pos()
 
         birb.main(Mouse_x, Mouse_y)
-        changeInPos = birb.birb_list
         moveAllBirbs()
 
         # Repaint the screen
@@ -105,6 +112,6 @@ while not done:
 
     pygame.display.flip()
     clock.tick_busy_loop(60)
-    #time.sleep(0.1)
+    # time.sleep(0.1)
 
 pygame.quit()
