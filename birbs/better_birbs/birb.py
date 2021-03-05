@@ -2,7 +2,7 @@ import math
 import random
 
 birb_list = []
-speed = 5.5
+speed = 5
 sight_radius = 300
 WINDOW_WIDTH = 1500  # 800
 WINDOW_HEIGHT = 1050  # 690
@@ -27,12 +27,12 @@ class birb:
 
     def path_finding(self):
         self.sight()
-        if len(self.nearByBirbsList) != 0:
-            # self.separation()
-            # self.alignment()
+        if len(self.nearByBirbsList) != 0:  # ts
+            self.separation()
+            self.alignment()
             self.cohesion()
-        # self.avoid_Walls()
-        # self.move()
+        self.avoid_Walls()
+        self.move()
 
     def sight(self):
         self.nearByBirbsList.clear()
@@ -68,7 +68,7 @@ class birb:
         total = 0
         for i in self.nearByBirbsList:
             distance, angle = i[0], i[1]
-            total += 0.055 * math.exp(-0.005 * distance) * -self.L_or_R(angle)
+            total += 0.085 * math.exp(-0.005 * distance) * -self.L_or_R(angle)
         self.rotate(total)
 
     def alignment(self):
@@ -80,14 +80,27 @@ class birb:
         global circlePos
         x = sum(i[0] for i in (i[3] for i in self.nearByBirbsList)) / len(self.nearByBirbsList)
         y = sum(i[1] for i in (i[3] for i in self.nearByBirbsList)) / len(self.nearByBirbsList)
+        angle = math.atan2(self.pos[1] - y, x - self.pos[0])
+        self.rotate(math.radians(4 * self.L_or_R(angle)))
         if self.id == 0:
-            print(x, y)
             circlePos = x, y
 
     def avoid_Walls(self):
-        if self.getPos()[0] > WINDOW_WIDTH - 20:
-            distance = 1 / (WINDOW_WIDTH - self.getPos()[0])
-            total = 0.055 * math.exp(-0.005 * distance) * self.angle
+        if self.getPos()[0] > WINDOW_WIDTH - 400:  # right border
+            distance = (WINDOW_WIDTH - self.getPos()[0])
+            total = math.exp(-0.025 * distance) * math.copysign(1, self.angle)
+            self.rotate(total)
+        elif self.getPos()[0] < 400:  # left border
+            distance = (self.getPos()[0])
+            total = math.exp(-0.025 * distance) * math.copysign(1, -self.angle)
+            self.rotate(total)
+        if self.getPos()[1] > WINDOW_HEIGHT - 400:  # bottom border
+            distance = (WINDOW_WIDTH - self.getPos()[0])
+            total = math.exp(-0.025 * distance) * -1  # fix
+            self.rotate(total)
+        elif self.getPos()[0] > WINDOW_WIDTH - 400:  # top border
+            distance = (WINDOW_WIDTH - self.getPos()[0])
+            total = math.exp(-0.025 * distance) * math.copysign(1, self.angle)
             self.rotate(total)
 
     def move(self):
@@ -127,12 +140,12 @@ def init():
 
 def ts():
     global num_of_birbs
-    b1 = birb([150, 400], 0, 0)
-    b2 = birb([250, 400], 0, 1)
-    b3 = birb([200, 460], math.radians(0), 2)
+    b1 = birb([500, 460], math.radians(180), 0)
+    # b2 = birb([125, 400], 0, 1)
+    # b3 = birb([275, 400], math.radians(0), 2)
     birb_list.append(b1)
-    birb_list.append(b2)
-    birb_list.append(b3)
+    # birb_list.append(b2)
+    # birb_list.append(b3)
     num_of_birbs = len(birb_list)
 
 
@@ -169,9 +182,10 @@ mouse = False
 
 
 def main(Mouse_x, Mouse_y):
+    Mouse_x, Mouse_y = Mouse_x, Mouse_y
     if mouse:
         if Mouse_x != -1:
-            birb_list[1].pos = (Mouse_x, Mouse_y)
+            birb_list[0].pos = (Mouse_x, Mouse_y)
     for i in birb_list:
         i.path_finding()
 

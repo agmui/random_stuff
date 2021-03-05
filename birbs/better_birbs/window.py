@@ -51,9 +51,9 @@ def moveAllBirbs():
     circle.rect.center = birb.circlePos  # ts------------
 
 
-# birb.init()
-birb.ts()
-# birb.test()
+birb.init()
+#birb.ts()
+#birb.test()
 num_of_birbs = birb.num_of_birbs
 pygame.init()
 pygame.font.init()
