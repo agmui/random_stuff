@@ -49,20 +49,27 @@ class Sprite(pygame.sprite.Sprite):
 def moveAllBirbs():
     for i in sprite_group:
         i.moveBy(birb.birb_list)
+        i.rotate(birb.birb_list)
         if viswals:
             for j in sight_group:
                 j.moveBy(birb.birb_list)
-        i.rotate(birb.birb_list)
+                j.rotate(birb.birb_list)
     # circle.rect.center = birb.circlePos  # ts------------
 
 
 class Gui(pygame.sprite.Sprite):
-    def __init__(self, image, altImg, scale, position):
+    def __init__(self, image, altImg, scale, position, text='', textPos=(45, 5)):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(pygame.image.load(image), scale)
         self.altImg = pygame.transform.scale(pygame.image.load(altImg), scale) if altImg != False else 0
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=position)
+        if text != '':
+            self.font = pygame.font.SysFont("Arial", 20, bold=True)
+            self.textSurface = self.font.render(text, True, (255, 255, 255))
+            self.textRect = self.textSurface.get_rect(center=textPos)
+            self.image.blit(self.textSurface, textPos)
+            self.altImg.blit(self.textSurface, textPos)
 
     def touching_Mouse(self, pos):
         return self.rect.collidepoint(pos)
@@ -73,37 +80,41 @@ class Gui(pygame.sprite.Sprite):
         self.image, self.altImg = self.altImg, self.image
 
 
-def init_gui():  # make pull down tab for gui
+# use pygme gui
+# multiple viswal sprite to make it accurate
+def init_gui():  # make pull down tab for gui and add sliders for speed and sight
     global buttons
-    separation_button = Gui(pressed_button, unpressed_button, (112 // 2 - 15, 97 // 2 - 15), (WINDOW_WIDTH - 130, 70))
-    alignment_button = Gui(pressed_button, unpressed_button, (112 // 2 - 15, 97 // 2 - 15), (WINDOW_WIDTH - 130, 120))
-    cohesion_button = Gui(pressed_button, unpressed_button, (112 // 2 - 15, 97 // 2 - 15), (WINDOW_WIDTH - 130, 170))
-    pause_button = Gui(pause, play, (68 // 2 - 10, 73 // 2 - 10), (WINDOW_WIDTH - 130, 220))
-    step_button = Gui(step, False, (70 // 2, 58 // 2), (WINDOW_WIDTH - 70, 221))
-    buttons = [separation_button, alignment_button, cohesion_button, pause_button, step_button]
+    separation_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 70), "separation")
+    alignment_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 120), "alignment")
+    cohesion_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 170), "cohesion")
+    visuals_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 220), "visuals")
+    pause_button = Gui(pause, play, (24, 26), (WINDOW_WIDTH - 180, 280))
+    step_button = Gui(step, False, (35, 29), (WINDOW_WIDTH - 110, 281))
+    buttons = [separation_button, alignment_button, cohesion_button, visuals_button, pause_button, step_button]
     for i in buttons:
         gui_group.add(i)
 
 
 def gui():
-    global play, step
+    global play, step, viswals
     for count, i in enumerate(buttons):
         if i.touching_Mouse(pygame.mouse.get_pos()):
             i.change()
             if count < 3:
                 birb.filters[count] = not birb.filters[count]
             elif count == 3:
+                viswals = not viswals
+            elif count == 4:
                 play = not play
             else:
                 step = True
 
 
 birb.init()
-#birb.ts()
-#birb.test()
+# birb.ts()
+# birb.test()
 num_of_birbs = birb.num_of_birbs
 pygame.init()
-pygame.font.init()
 SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), SURFACE)
 
@@ -114,9 +125,6 @@ init_gui()
 for i in range(num_of_birbs):
     b = Sprite(birb_pic, i)
     sprite_group.add(b)
-    if viswals:
-        s = Sprite(sight, i)
-        sight_group.add(s)
 # -------ts
 # circle = Sprite(circle)
 # sprite_group.add(circle)
@@ -140,23 +148,28 @@ while not done:
             elif event.key == pygame.K_p:
                 play = not play
 
-    Mouse_x, Mouse_y = pygame.mouse.get_pos()# remove all ts stuff like the mouse
+    Mouse_x, Mouse_y = pygame.mouse.get_pos()  # remove all ts stuff like the mouse
     if step or play:
         birb.main(Mouse_x, Mouse_y)
         moveAllBirbs()
 
     # Repaint the screen
+    if viswals:
+        sprite_group[0].image = pygame.image.load(birb_touch).convert_alpha()  # fix
+        sight_group.update()
+        if len(sight_group) == 0:
+            s = Sprite(sight, i)
+            s.image = pygame.transform.scale(s.image, (birb.sight_radius, birb.sight_radius))
+            sight_group.add(s)
     sprite_group.update()  # re-position the game sprites
     gui_group.update()
-    if viswals:
-        sight_group.update()
     window.fill((100, 100, 100))
-
-    sprite_group.draw(window)  # draw the game sprites
-    gui_group.draw(window)
 
     if viswals:  # somehow order sight to back to not cover the birbs--------------------------------------------
         sight_group.draw(window)
+    sprite_group.draw(window)  # draw the game sprites
+    gui_group.draw(window)
+
     step = False
 
     pygame.display.flip()

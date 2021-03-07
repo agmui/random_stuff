@@ -7,7 +7,7 @@ sight_radius = 300
 WINDOW_WIDTH = 1500  # 800
 WINDOW_HEIGHT = 1050  # 690
 circlePos = 0, 0
-filters = [True, True, True]
+filters = [True, True, True, True]
 
 """
      90 
