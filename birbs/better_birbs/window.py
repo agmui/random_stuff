@@ -9,8 +9,8 @@ WINDOW_WIDTH = birb.WINDOW_WIDTH
 WINDOW_HEIGHT = birb.WINDOW_HEIGHT
 viswals = False
 
-birb_pic = os.path.join("assets", "birb.png")
-birb_touch = os.path.join("assets", "birb_touch.png")
+birb_pic = os.path.join("assets", "birb2.png")
+birb_touch = os.path.join("assets", "birb_touch2.png")
 sight = os.path.join("assets", "sight.png")
 circle = os.path.join("assets", "circle.png")
 pressed_button = os.path.join("assets", "pressed_button.png")
@@ -23,7 +23,10 @@ step = os.path.join("assets", "step.png")
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pic, index=0):
         pygame.sprite.Sprite.__init__(self)
-        self.ogImg = pygame.image.load(pic).convert_alpha()
+        if isinstance(pic, pygame.Surface):
+            self.ogImg = pic
+        else:
+            self.ogImg = pygame.image.load(pic).convert_alpha()
         self.image = self.ogImg
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=(0, 0))
@@ -44,17 +47,6 @@ class Sprite(pygame.sprite.Sprite):
 
     def getPos(self):
         return self.rect.center
-
-
-def moveAllBirbs():
-    for i in sprite_group:
-        i.moveBy(birb.birb_list)
-        i.rotate(birb.birb_list)
-        if viswals:
-            for j in sight_group:
-                j.moveBy(birb.birb_list)
-                j.rotate(birb.birb_list)
-    # circle.rect.center = birb.circlePos  # ts------------
 
 
 class Gui(pygame.sprite.Sprite):
@@ -79,6 +71,30 @@ class Gui(pygame.sprite.Sprite):
             return
         self.image, self.altImg = self.altImg, self.image
 
+
+def init_window_birb():
+    global b1, birb_pic
+    birb_pic = pygame.image.load(birb_pic).convert_alpha()
+    birb_pic = pygame.transform.scale(birb_pic, (40, 15))
+    s = Sprite(sight)
+    s.ogImg = pygame.transform.scale(s.image, (birb.sight_radius, birb.sight_radius))
+    sight_group.add(s)
+    for i in range(num_of_birbs):
+        b = Sprite(birb_pic, i)
+        if i == 0:
+            b1 = b
+        sprite_group.add(b)
+
+
+def moveAllBirbs():
+    for i in sprite_group:
+        i.moveBy(birb.birb_list)
+        i.rotate(birb.birb_list)
+        if viswals:
+            for j in sight_group:
+                j.moveBy(birb.birb_list)
+                j.rotate(birb.birb_list)
+    # circle.rect.center = birb.circlePos  # ts------------
 
 # use pygme gui
 # multiple viswal sprite to make it accurate
@@ -122,9 +138,8 @@ sprite_group = pygame.sprite.Group()  # All sprites for updating and drawing
 sight_group = pygame.sprite.Group()
 gui_group = pygame.sprite.Group()
 init_gui()
-for i in range(num_of_birbs):
-    b = Sprite(birb_pic, i)
-    sprite_group.add(b)
+init_window_birb()
+
 # -------ts
 # circle = Sprite(circle)
 # sprite_group.add(circle)
@@ -155,12 +170,11 @@ while not done:
 
     # Repaint the screen
     if viswals:
-        sprite_group[0].image = pygame.image.load(birb_touch).convert_alpha()  # fix
+        b1.ogImg = pygame.image.load(birb_touch).convert_alpha()  # fix
+        b1.ogImg = pygame.transform.scale(b1.ogImg, (40, 15))
         sight_group.update()
-        if len(sight_group) == 0:
-            s = Sprite(sight, i)
-            s.image = pygame.transform.scale(s.image, (birb.sight_radius, birb.sight_radius))
-            sight_group.add(s)
+    else:
+        b1.ogImg = birb_pic
     sprite_group.update()  # re-position the game sprites
     gui_group.update()
     window.fill((100, 100, 100))

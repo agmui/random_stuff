@@ -1,4 +1,5 @@
-import math
+x = 1
 
-#self =
-print('hello world'*500)
+def test():
+    print(x)
+    y = x
