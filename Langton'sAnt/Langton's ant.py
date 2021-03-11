@@ -1,9 +1,7 @@
 import pygame
 import time
-import Small_projects.Langtons_Ant_code
 import numpy as np
-
-from Small_projects import Langtons_Ant_code
+import Langtons_Ant_code
 
 pygame.init()
 clock = pygame.time.Clock()  # FPS stuff
