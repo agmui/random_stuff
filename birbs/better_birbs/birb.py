@@ -18,7 +18,14 @@ filters = [True, True, True, True]
 
 class birb:
     # add velocity
+    # - if cohesion midpoint if far away go faster
+    # - if neighbor birb rly rly close go faster
+    # - alignment match speed of all other birbs
+    # make avoid filter have smaller range
+    # make cohesion turn smoother
+    # make alignment to be the avenge of all neighbor birbs angle
     # change birb pic to have center in right place
+    # add severity dampener like if diff angle is very big then turn sharp but if not turn not so sharp
     def __init__(self, pos, angle, id):
         self.pos = pos
         self.angle = angle
@@ -73,9 +80,8 @@ class birb:
         self.rotate(total)
 
     def alignment(self):
-        for i in self.nearByBirbsList:
-            angle = i[2]
-            self.rotate(math.radians(self.L_or_R(angle)))
+        angle = sum(i[2] for i in self.nearByBirbsList) / len(self.nearByBirbsList)
+        self.rotate(math.radians(self.L_or_R(angle)))
 
     def cohesion(self):
         global circlePos

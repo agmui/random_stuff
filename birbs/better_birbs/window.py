@@ -23,10 +23,7 @@ step = os.path.join("assets", "step.png")
 class Sprite(pygame.sprite.Sprite):
     def __init__(self, pic, index=0):
         pygame.sprite.Sprite.__init__(self)
-        if isinstance(pic, pygame.Surface):
-            self.ogImg = pic
-        else:
-            self.ogImg = pygame.image.load(pic).convert_alpha()
+        self.ogImg = pic if isinstance(pic, pygame.Surface) else pygame.image.load(pic).convert_alpha()
         self.image = self.ogImg
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=(0, 0))
@@ -98,12 +95,13 @@ def moveAllBirbs():
 
 # use pygme gui
 # multiple viswal sprite to make it accurate
+# add traling effect to visuwals
 def init_gui():  # make pull down tab for gui and add sliders for speed and sight
     global buttons
     separation_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 70), "separation")
     alignment_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 120), "alignment")
     cohesion_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 170), "cohesion")
-    visuals_button = Gui(pressed_button, unpressed_button, (155, 33), (WINDOW_WIDTH - 130, 220), "visuals")
+    visuals_button = Gui(unpressed_button, pressed_button, (155, 33), (WINDOW_WIDTH - 130, 220), "visuals")
     pause_button = Gui(pause, play, (24, 26), (WINDOW_WIDTH - 180, 280))
     step_button = Gui(step, False, (35, 29), (WINDOW_WIDTH - 110, 281))
     buttons = [separation_button, alignment_button, cohesion_button, visuals_button, pause_button, step_button]
@@ -179,7 +177,7 @@ while not done:
     gui_group.update()
     window.fill((100, 100, 100))
 
-    if viswals:  # somehow order sight to back to not cover the birbs--------------------------------------------
+    if viswals:
         sight_group.draw(window)
     sprite_group.draw(window)  # draw the game sprites
     gui_group.draw(window)
