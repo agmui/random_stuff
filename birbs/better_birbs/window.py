@@ -25,7 +25,6 @@ class Sprite(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.ogImg = pic if isinstance(pic, pygame.Surface) else pygame.image.load(pic).convert_alpha()
         self.image = self.ogImg
-        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=(0, 0))
         self.index = index
 
@@ -51,7 +50,6 @@ class Gui(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.transform.scale(pygame.image.load(image), scale)
         self.altImg = pygame.transform.scale(pygame.image.load(altImg), scale) if altImg != False else 0
-        self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect(center=position)
         if text != '':
             self.font = pygame.font.SysFont("Arial", 20, bold=True)
