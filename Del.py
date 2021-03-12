@@ -1,3 +1,15 @@
-nearByBirbsList = [[1,2,3, 4], [5,6,7, 8]]
-angle = sum(i[2] for i in nearByBirbsList )/ len(nearByBirbsList)
-print(angle)
+import math
+
+
+def differenceAngle(self, angle):  # returns the difference angle between two birbs
+    angle = angle - self
+    if angle > math.pi:
+        angle -= 2 * math.pi
+    elif angle < -math.pi:
+        angle += 2 * math.pi
+    return angle
+
+
+angle = -2.9
+x = (1/(differenceAngle(-math.pi, angle)*5))
+print(math.degrees(x))

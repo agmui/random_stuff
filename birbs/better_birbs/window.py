@@ -125,8 +125,9 @@ def gui():
 
 
 birb.init()
-# birb.ts()
-# birb.test()
+#birb.ts()
+#birb.test()
+
 num_of_birbs = birb.num_of_birbs
 pygame.init()
 SURFACE = pygame.HWSURFACE | pygame.DOUBLEBUF
@@ -148,7 +149,7 @@ clock = pygame.time.Clock()
 done = False
 temp = 0
 step = True
-play = not False
+play = False
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -160,6 +161,8 @@ while not done:
                 step = True
             elif event.key == pygame.K_p:
                 play = not play
+            elif event.key == pygame.K_x:
+                pygame.quit()
 
     Mouse_x, Mouse_y = pygame.mouse.get_pos()  # remove all ts stuff like the mouse
     if step or play:
