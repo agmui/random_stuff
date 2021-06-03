@@ -23,17 +23,21 @@ class Player:
 
     def addCard(self, card, where):
         if where == "hand":
-            self.hand.append(card)  # apply to js
+            self.hand += card  # apply to js
         elif where == "stable":
-            self.stable.append(card)
+            self.stable += card
 
     def removeCard(self, card, where):
         if where == "hand":
-            if card in self.hand:
-                self.hand.remove(card)
+            for j in card:
+                for i in self.hand:
+                    if i.name == j.name:
+                        self.hand.remove(i)
         elif where == "stable":
-            if card in self.stable:
-                self.stable.remove(card)
+            for j in card:
+                for i in self.stable:
+                    if i.name == j.name:
+                        self.stable.remove(i)
 
     def getName(self):
         return self.name
@@ -42,7 +46,7 @@ class Player:
         return self.hand
 
     def getHandName(self):
-        return [i.getName() for i in self.hand]
+        return [i.name for i in self.hand]
 
     def getStable(self):
         return self.stable
@@ -62,11 +66,12 @@ class Board:
         self.discard = []
         self.turn = 0
         self.phase = 1
+        self.sendPic = []
         self.bypass = []
 
     def setup(self):
         for i in self.players:
-            i.addCard(self.drawFromDiscard(5))
+            i.addCard(self.drawFromDeck(5), "hand")
 
     def drawFromDeck(self, num=1):
         return [self.deck[random.randint(0, len(self.deck))] for i in range(num)]
@@ -74,65 +79,128 @@ class Board:
     def drawFromDiscard(self):
         return random.randint(0, len(self.discard))
 
-    def addCard(self, card, where):
+    def addCard(self, card, where):  # have js take card as list
         if where == "deck":
-            self.deck.append(card)
+            self.deck += card
         elif where == "discard":
-            self.discard.append(card)
+            self.discard += card
 
-    def removeCard(self, card, where):
+    def removeCard(self, card, where):  # have js take card as list
         if where == "deck":
-            for i in self.deck:
-                if i.name == card.name:
-                    self.deck.remove(i)
-                    return
+            for j in card:
+                for i in self.deck:
+                    if i.name == j.name:
+                        self.deck.remove(i)
+                        # fix in js there should be no return
         elif where == "discard":
-            for i in self.discard:
-                if i.name == card.name:
-                    self.discard.remove(i)
-                    return
-        print("Player class:", card.name, "not in", where)
+            for j in card:
+                for i in self.discard:
+                    if i.name == j.name:
+                        self.discard.remove(i)
+                        # fix in js there should be no return
 
     # some function to talk to AutoCard class
 
     def move(self, name, card, f, t, bypass=False):
-        if f == "deck":
-            return
-        elif f == "discard":
-            return
-        elif f == "hand" or f == "stable":
-            return
-        else:
-            print()
+        if self.bypass:
+            if name == self.bypass[-1]: self.bypass.pop()
+        elif name != self.getTurn() and bypass == False:
+            print("Player class: not player's turn")
+            return False
+        elif len(self.bypass) > 0: return False
 
-        if t == "deck":
-            return
-        elif t == "discard":
-            return
-        elif t == "hand" or f == "stable":
-            return
+        print("MOVE:", name, "moved", card[0].name, "from", f, "to", t)
+        if card == "random": card = self.drawFromDeck() if f == "deck" else self.drawFromDiscard()
+        if type(card) != list: card = [card]
+        for i in card:
+            if type(i) != Card:
+                i = Card(i.name, i.text, i.type, i.img)
+        if f == "deck":
+            self.removeCard(card, f)
+            """if t != "discard" or t != "deck":
+                if t == "Hand" or t == "Stable":
+                    t = [name, t]
+                self.sendPic.append({
+                    "card": card,
+                    "to": t
+                })"""
+        elif f == "discard":
+            self.removeCard(card, f)  # probs can merge fix in js
+            """if t != "discard" or t != "deck":
+                if t == "Hand" or t == "Stable":
+                    t = [name, t]
+                self.sendPic.append({
+                    "card": card,
+                    "to": t
+                })"""
+            # fix so it looks like top in js
+        elif f == "hand" or f == "stable":  # maybe can merge with bot
+            # use get player function in js
+            self.getPlayer(name).removeCard(card, f)
         else:
-            print()
+            self.getPlayer(f[0]).removeCard(card, f[1])  # change in js
+
+        if t == "deck":  # can combine in js
+            self.addCard(card, t)
+        elif t == "discard":
+            self.addCard(card, t)
+        elif t == "hand" or t == "stable":
+            # use function change in js
+            self.getPlayer(name).addCard(card, t)
+        else:  # use function in js
+            self.getPlayer(t[0]).addCard(card, t[1])
 
         for i in self.players:
             if len(i.getStable()) >= 7:
                 print(i.getName, "wins")
                 return i
 
+    def interrupt(self, toWho):
+        print("Player class: recived interupt for", toWho)
+        self.bypass.append(toWho)
 
-    # interupt?
+    def rotateTurn(self):
+        self.turn += 1
+        if self.phase != 5:
+            print("ERROR: not end of phase")
+            return
+        self.phase = 1
+        self.log = []
+        if self.turn > len(self.players) - 1:
+            self.turn = 0
+        return self.getTurn()  # change in js
 
-    # def rotateTurn(self, )
+    def rotatePhase(self):
+        self.phase += 1
+        if self.phase >= 4 and self.getTurn(True):
+            if self.phase == 5:
+                self.phase -= 1
+            print("Player class:", self.getTurn(True), "has to maney cards")
+            return {"numOfCards": len(self.getTurn(True).getHand()) - 7}
 
-    # def rotatePhase(self, )
+        if self.phase == 1:
+            pass
+        elif self.phase == 2:
+            print("Player class: draws card for player")
+            self.rotatePhase()
+        elif self.phase == 3:
+            print("Player class: draw or play")
+        elif self.phase == 4:
+            pass
 
-    def getTurn(self):
-        return self.turn
+        return self.phase
+
+    def getTurn(self, object=False):
+        return self.players[self.turn] if object else self.players[self.turn].getName()
 
     def getPhase(self):
         return self.phase
 
-    # def getPlayer(self)
+    def getPlayer(self, name):
+        for i in self.players:
+            if i.getName() == name:
+                return i
+        print("Player class: player not found")
 
     def getDeck(self):
         return self.deck
@@ -142,8 +210,9 @@ class Board:
 
 
 def main():
-    c = Card("test", "test", "test", "test")
-    game = Board(["hi"])
+    game = Board(["a", "b"])
+    c = game.drawFromDeck()
+    print(c[0].name, "\n")
 
 
 main()

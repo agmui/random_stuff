@@ -41,8 +41,5 @@ def main():
 
 main()"""
 
-
-l=[1,1,2]
-l.remove(1)
-print(l)
-
+if []:
+    print(1)
