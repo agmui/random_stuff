@@ -1,6 +1,7 @@
 import os
 import random
 import json
+import AutoCard
 
 data = os.path.join("game_test", "data.json")
 with open(data) as f:
@@ -47,6 +48,9 @@ class Player:
 
     def getHandName(self):
         return [i.name for i in self.hand]
+
+    def printHand(self):
+        print([i.name for i in self.hand])
 
     def getStable(self):
         return self.stable
@@ -102,19 +106,21 @@ class Board:
     # some function to talk to AutoCard class
 
     def move(self, name, card, f, t, bypass=False):
-        if self.bypass:
-            if name == self.bypass[-1]: self.bypass.pop()
+        if self.bypass and name == self.bypass[-1]: self.bypass.pop()
         elif name != self.getTurn() and bypass == False:
             print("Player class: not player's turn")
             return False
-        elif len(self.bypass) > 0: return False
+        elif len(self.bypass) > 0:
+            print("Player class: still someone in bypass list")
+            return False
 
-        print("MOVE:", name, "moved", card[0].name, "from", f, "to", t)
         if card == "random": card = self.drawFromDeck() if f == "deck" else self.drawFromDiscard()
         if type(card) != list: card = [card]
-        for i in card:
+        print("MOVE:", name, "moved", card[0].name, "from", f, "to", t) # move print statment in js
+        """for i in card: not needed remove in js
             if type(i) != Card:
-                i = Card(i.name, i.text, i.type, i.img)
+                i = Card(i.name, i.text, i.type, i.img)"""
+
         if f == "deck":
             self.removeCard(card, f)
             """if t != "discard" or t != "deck":
@@ -208,11 +214,25 @@ class Board:
     def getDiscard(self):
         return self.discard
 
+    def printBoard(self):
+        print("====================")
+        print("Phase:", self.getPhase(), "Turn:", self.getTurn())
+        for i in self.players:
+            print("\n--------------")
+            print(i.getName())
+            print("--------------\nHand")
+            print(i.getHandName())
+            print("Stable")
+            print(i.getStableName())
+        print("====================")
+
 
 def main():
     game = Board(["a", "b"])
     c = game.drawFromDeck()
-    print(c[0].name, "\n")
+    game.printBoard()
+    game.move("a", c, "deck", "hand")
+    game.printBoard()
 
 
 main()
