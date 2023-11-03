@@ -1,25 +1,39 @@
 """
-import pygame
+import pygame as py
+import pygame_gui
 
-pygame.init()
-clock = pygame.time.Clock()  # FPS stuff
-GD = pygame.display.set_mode((200 * 5, 200 * 5))
+#fav colors
+LIGHTGRAY = (50, 50, 50)
+WHITE = (250, 250, 250)
+GRAY = (110, 110, 110)
+
+py.init()
+manager = pygame_gui.UIManager((800, 800))
+clock = py.time.Clock()  # FPS stuff
+GD = py.display.set_mode((1000, 1000))
 crashed = False
 
 while not crashed:  # makes window not buggy
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    time_delta = clock.tick(60)/1000.0
+    for event in py.event.get():
+        if event.type == py.QUIT:
             crashed = True
+        if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
+            pass
 
-        GD.fill((110, 110, 110))  # draw background
+        GD.fill(GRAY)  # draw background
 
-        #fav colors (50, 50, 50), (250, 250, 250), (110, 110, 110)
+        manager.process_events(event)
 
 
-    pygame.display.update()
+    manager.update(time_delta)
+
+    manager.draw_ui(GD)
+
+    py.display.update()
     clock.tick(60)
 
-pygame.quit()
+py.quit()
 # use dis as example
 # reasearch about python box2d ____________________________________________________<---look here use bot code
 # rect function for pos and size
