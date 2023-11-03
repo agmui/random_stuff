@@ -4,8 +4,8 @@ import random
 birb_list = []
 speed = 5
 sight_radius = 300
-WINDOW_WIDTH = 1500  # 800
-WINDOW_HEIGHT = 1050  # 690
+WINDOW_WIDTH = 1500 #1500  
+WINDOW_HEIGHT = 900 #1050  
 circlePos = 0, 0
 filters = [True, True, True, True]
 

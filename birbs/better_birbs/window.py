@@ -3,7 +3,8 @@ import os
 import time
 
 import pygame
-from birbs.better_birbs import birb
+#from birbs.better_birbs import birb
+import birb
 
 WINDOW_WIDTH = birb.WINDOW_WIDTH
 WINDOW_HEIGHT = birb.WINDOW_HEIGHT
@@ -147,7 +148,7 @@ clock = pygame.time.Clock()
 done = False
 temp = 0
 step = True
-play = False
+play = True
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
