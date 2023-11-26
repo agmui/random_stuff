@@ -15,9 +15,9 @@ birbs_check = [(-1, -1, -1) for i in range(len(birbs) - 1)]
 r = 3.5  # the speed of the birbs
 sight_radius = 87  # how far in front they can see
 
-birb = pygame.image.load(r'/home/agmui/Desktop/pyImages/birb.png')
+birb = pygame.image.load('./assets/birb.png')
 #green_birb = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\birb_touch.png')
-sight = pygame.image.load(r'/home/agmui/Desktop/pyImages/sight.png')
+sight = pygame.image.load('./assets/sight.png')
 
 
 class Draw:
