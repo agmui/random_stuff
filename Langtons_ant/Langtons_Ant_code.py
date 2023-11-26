@@ -1,7 +1,7 @@
 #import numpy as np
 
 grid = [[0] * 100 for i in range(100)]
-x, y = 5, 5
+x, y = 50, 50
 direction = "N"
 none = 0
 red = 1
@@ -87,7 +87,7 @@ if  any(item in l for item in hi for l in (grid[1])):
 
 for i in range(12):
     ant()
-    print()
-    for i in range(100): 
-        print(grid[i])
+    # print()
+    # for i in range(100): 
+    #     print(grid[i])
 

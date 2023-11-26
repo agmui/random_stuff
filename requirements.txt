@@ -1,4 +1,5 @@
 pygame
+# numpy
 beautifulsoup4==4.11.1
 bs4==0.0.1
 certifi==2022.12.7

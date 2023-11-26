@@ -1,6 +1,6 @@
 import pygame
 import time
-import numpy as np
+# import numpy as np
 import Langtons_Ant_code
 
 pygame.init()
