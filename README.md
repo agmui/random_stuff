@@ -27,3 +27,4 @@ to install all dependencies
 10. [webscraping](webscraping/)
 11. [Minesweeper](Mine_Sweeper/)
 12. [OSU](osu_files/)
+13. [LM_game](LM_game/)

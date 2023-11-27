@@ -2,7 +2,7 @@ import pygame
 import time
 
 pygame.init()
-table = pygame.image.load(r'C:\Users\antho\Desktop\pyImages\table.png')
+table = pygame.image.load('./sudoku-blankgrid.png')
 gameDisplay = pygame.display.set_mode((527, 527))
 clock = pygame.time.Clock()
 crashed = False
